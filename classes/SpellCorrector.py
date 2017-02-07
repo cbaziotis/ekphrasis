@@ -8,9 +8,15 @@ from utils.helpers import read_stats
 REGEX_TOKEN = re.compile(r'\b[a-z]{2,}\b')
 
 
-# @profile
 class SpellCorrector:
+    """
+    The SpellCorrector extends the functionality of the Peter Norvig's spell-corrector in http://norvig.com/spell-correct.html
+    """
     def __init__(self, corpus="english"):
+        """
+
+        :param corpus: the statistics from which corpus to use for the spell correction.
+        """
         super().__init__()
         self.WORDS = Counter(read_stats(corpus, 1))
         self.N = sum(self.WORDS.values())
@@ -94,21 +100,32 @@ class SpellCorrector:
         return max(self.edit_candidates(word, assume_wrong=assume_wrong, fast=fast), key=self.P)
 
     def correct_text(self, text):
-        "Correct all the words within a text, returning the corrected text."
+        """
+        Correct all the words within a text, returning the corrected text."""
+
         return re.sub('[a-zA-Z]+', self.correct_match, text)
 
     def correct_match(self, match):
-        "Spell-correct word in match, and preserve proper upper/lower/title case."
+        """
+        Spell-correct word in match, and preserve proper upper/lower/title case.
+        """
+
         word = match.group()
         return self.case_of(word)(self.correct(word.lower()))
 
     def correct_word(self, word, assume_wrong=False, fast=False):
-        "Spell-correct word in match, and preserve proper upper/lower/title case."
+        """
+        Spell-correct word in match, and preserve proper upper/lower/title case.
+        """
+
         return self.case_of(word)(self.correct(word.lower(), assume_wrong=assume_wrong, fast=fast))
 
     @staticmethod
     def case_of(text):
-        "Return the case-function appropriate for text: upper, lower, title, or just str."
+        """
+        Return the case-function appropriate for text: upper, lower, title, or just str.
+        """
+
         return (str.upper if text.isupper() else
                 str.lower if text.islower() else
                 str.title if text.istitle() else

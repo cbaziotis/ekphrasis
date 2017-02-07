@@ -45,9 +45,8 @@ class Pdist(dict):
 class Segmenter:
     def __init__(self, corpus="english", max_split_length=20):
         """
-
-        :param corpus: define the statistics of what corpus you would like to use
-        :param max_split_length:
+        :param corpus: the statistics from which corpus to use for the spell correction.
+        :param max_split_length: the maximum length of that a word can have for looking for splits
         """
         # self.unigrams = Counter(read_stats(corpus, 1))
         # self.bigrams = Counter(read_stats(corpus, 2))
@@ -128,6 +127,4 @@ class Segmenter:
         print("speedofart: ", self.segment('speedofart'))
         print("smallandinsignificant: ", self.segment('smallandinsignificant'))
         print("largeandinsignificant: ", self.segment('largeandinsignificant'))
-
-
         # Segmenter().demo()
