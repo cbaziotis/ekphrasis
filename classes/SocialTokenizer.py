@@ -8,7 +8,38 @@ from classes.expressions import Expressions
 
 
 class SocialTokenizer:
+    """
+    A parametric tokenizer that understands many expression found in natural language such as hashtags, dates, times, emoticons and much more.
+    """
     def __init__(self, lowercase=False, verbose=False, debug=False, **kwargs):
+        """
+
+        :param lowercase: set to True in order to lowercase the text
+        :param verbose: set to True to print each text after tokenization. Useful for debugging purposes.
+        :param debug: set to True in order to pause after tokenizing each text (wait for pressing any key).
+                Useful for debugging purposes, if you want to inspect each text as it goes.
+        :param kwargs:
+            See below
+
+        :Keyword Arguments:
+            emojis (bool): True to keep emojis
+            urls (bool): True to keep urls
+            tags (bool): True to keep tags: <tag>
+            emails (bool): True to keep emails
+            users (bool): True to keep users handles: @cbaziotis
+            hashtags (bool): True to keep hashtags
+            cashtags (bool): True to keep cashtags
+            phones (bool): True to keep phones
+            percents (bool): True to keep percents
+            money (bool): True to keep money expressions
+            date (bool): True to keep date expressions
+            time (bool): True to keep time expressions
+            acronyms (bool): True to keep acronyms
+            emoticons (bool): True to keep emoticons
+            censored (bool): True to keep censored words: f**k
+            emphasis (bool): True to keep words with emphasis: *very* good
+            numbers (bool): True to keep numbers
+        """
         self.lowercase = lowercase
         self.debug = debug
         self.verbose = verbose
