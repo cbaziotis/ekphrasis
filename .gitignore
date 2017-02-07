@@ -2,7 +2,9 @@
 analysis/
 corpus/
 gen_corpus/
+classes/__pycache__
 stats/english/counts_1grams.pickle
 stats/english/counts_2grams.pickle
 stats/twitter/counts_1grams.pickle
 stats/twitter/counts_2grams.pickle
+*.pyc
