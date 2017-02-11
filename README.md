@@ -7,4 +7,5 @@ The Spell Corrector extends the functionality of Peter Norvig's spell-corrector.
 Word Segmentation that implements the Viterbi algorithm for word segmentation. Based on CH14 from the book Beautiful Data (Segaran and Hammerbacher, 2009)
 
 
+---
 documentation and examples coming soon...
