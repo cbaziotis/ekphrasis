@@ -129,10 +129,11 @@ emoticons = {
     'o/\o': '<highfive>',
     '^5': '<highfive>',
     '>_>^': '<highfive>',
-    '^<_<': '<highfive>',
+    '^<_<': '<highfive>',  # todo:fix tokenizer - MISSES THIS
     '<3': '<heart>'
 }
 
+# todo: clear this mess
 pattern = re.compile("^[:=\*\-\(\)\[\]x0oO\#\<\>8\\.\'|\{\}\@]+$")
 mirror_emoticons = {}
 for exp, tag in emoticons.items():
@@ -168,8 +169,11 @@ for exp, tag in emoticons.items():
 
         # print(exp + "\t\t" + mirror)
         mirror_emoticons[mirror] = tag
-
 emoticons.update(mirror_emoticons)
+
+for exp, tag in list(emoticons.items()):
+    if exp.lower() not in emoticons:
+        emoticons[exp.lower()] = tag
 
 emoticon_groups = {
     "positive": {'<highfive>', '<laugh>', '<heart>', '<happy>'},
