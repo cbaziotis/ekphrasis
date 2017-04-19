@@ -20,10 +20,10 @@ _ekphrasis_ processes text in two steps:
   2. **Post-processing**. After the tokenization you can perform an extra postprocessing step, applying modifications on the extracted tokens.
   This is where you can perform spell correction, word normalization and segmentation and decide which tokens to omit, normalize or annotate (surround or replace with special tags).
 
-###Spell Correction
+### Spell Correction
 The Spell Corrector extends the functionality of Peter Norvig's spell-corrector.
 
-###Word Segmentation
+### Word Segmentation
 Word Segmentation that implements the Viterbi algorithm for word segmentation. Based on CH14 from the book Beautiful Data (Segaran and Hammerbacher, 2009)
 
 
