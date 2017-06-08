@@ -14,7 +14,7 @@ _ekphrasis_ processes text in two steps:
   Although there are some tokenizers geared towards Twitter [1],[2] that recognize the Twitter markup 
   and some basic sentiment expressions or simple emoticons. 
   Our tokenizer offers additional functionality as it is able to identify most emoticons, emojis, expressions such as 
-  dates (e.g. 07/11/2011, April 23rd), times (e.g. 4:30pm, 11:00 am), currencies (e.g. \$10, 25mil, 50\euro), acronyms, censored words (e.g. s**t), 
+  dates (e.g. 07/11/2011, April 23rd), times (e.g. 4:30pm, 11:00 am), currencies (e.g. \$10, 25mil, 50€), acronyms, censored words (e.g. s**t), 
   words with emphasis (e.g. *very*) and more.
  
   2. **Post-processing**. After the tokenization you can perform an extra postprocessing step, applying modifications on the extracted tokens.
@@ -34,6 +34,6 @@ _Ekphrasis_ means expression in Greek (Modern Greek:έκφραση, Ancient Gree
 
 #### References
 
-[1]K. Gimpel et al., “Part-of-speech tagging for twitter: Annotation, features, and experiments,” in Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies: short papers-Volume 2, 2011, pp. 42–47.
+[1] K. Gimpel et al., “Part-of-speech tagging for twitter: Annotation, features, and experiments,” in Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies: short papers-Volume 2, 2011, pp. 42–47.
 
-[2]C. Potts, “Sentiment Symposium Tutorial: Tokenizing,” Sentiment Symposium Tutorial, 2011. [Online]. Available: http://sentiment.christopherpotts.net/tokenizing.html.
+[2] C. Potts, “Sentiment Symposium Tutorial: Tokenizing,” Sentiment Symposium Tutorial, 2011. [Online]. Available: http://sentiment.christopherpotts.net/tokenizing.html.

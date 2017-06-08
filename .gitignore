@@ -11,3 +11,4 @@ stats/english/counts_2grams.pickle
 stats/twitter/counts_1grams.pickle
 stats/twitter/counts_2grams.pickle
 *.pyc
+pypi_push.bat

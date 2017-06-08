@@ -246,6 +246,8 @@ class TextPreProcessor:
         ###########################
         # unpack contractions: i'm -> i am, can't -> can not...
         ###########################
+
+        # remove textacy dependency
         if self.unpack_contractions:
             doc = textacy.preprocess.unpack_contractions(doc)
 
