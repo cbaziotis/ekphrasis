@@ -123,3 +123,8 @@ class Expressions:
     def get_compiled(self):
         regexes = {k.lower(): re.compile(self.EXPRESSIONS[k]) for k, v in self.EXPRESSIONS.items()}
         return regexes
+
+    def print_expressions(self):
+        {print(k.lower(), ":", self.EXPRESSIONS[k]) for k, v in sorted(self.EXPRESSIONS.items())}
+
+# Expressions().print_expressions()

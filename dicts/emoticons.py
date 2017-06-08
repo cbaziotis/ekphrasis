@@ -120,6 +120,8 @@ emoticons = {
     '0:)': '<angel>',
     '0;^)': '<angel>',
     '>:)': '<devil>',
+    '>:D': '<devil>',
+    '>:-D': '<devil>',
     '>;)': '<devil>',
     '>:-)': '<devil>',
     '}:-)': '<devil>',

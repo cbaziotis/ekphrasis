@@ -28,7 +28,9 @@ Word Segmentation that implements the Viterbi algorithm for word segmentation. B
 
 
 
-
+---
+[_Ekphrasis_](https://www.wikiwand.com/en/Ekphrasis) means expression in Greek (Modern Greek:έκφραση, Ancient Greek:ἔκφρασις). 
+It's a word play between the meaning of the word and the fact that the tool relies heavily on Regular Expressions.
 
 #### References
 

@@ -2,6 +2,9 @@
 analysis/
 corpus/
 gen_corpus/
+dist/
+build/
+*.egg-info/
 classes/__pycache__
 stats/english/counts_1grams.pickle
 stats/english/counts_2grams.pickle

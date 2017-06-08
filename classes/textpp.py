@@ -3,9 +3,9 @@ from functools import lru_cache
 
 import textacy
 
-from classes.Segmenter import Segmenter
-from classes.SpellCorrector import SpellCorrector
 from classes.expressions import Expressions
+from classes.segmenter import Segmenter
+from classes.spellcorrect import SpellCorrector
 
 
 class TextPreProcessor:
