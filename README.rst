@@ -7,11 +7,12 @@ _DataStories_ team's submission for _SemEval-2017 Task 4 (English), Sentiment An
 
 **Documentation and complete examples will be coming soon.**
 
-## Overview
+Overview
+==
 
 _ekphrasis_ processes text in two steps: 
   1. **Tokenization**. The difficulty in tokenization is to avoid splitting expressions or words that should be kept intact (as one token).
-  Although there are some tokenizers geared towards Twitter [1],[2] that recognize the Twitter markup 
+  Although there are some tokenizers geared towards Twitter [1]_, [2]_ that recognize the Twitter markup
   and some basic sentiment expressions or simple emoticons. 
   Our tokenizer offers additional functionality as it is able to identify most emoticons, emojis, expressions such as 
   dates (e.g. 07/11/2011, April 23rd), times (e.g. 4:30pm, 11:00 am), currencies (e.g. \$10, 25mil, 50\euro), acronyms, censored words (e.g. s**t), 
@@ -32,8 +33,9 @@ Word Segmentation that implements the Viterbi algorithm for word segmentation. B
 [_Ekphrasis_](https://www.wikiwand.com/en/Ekphrasis) means expression in Greek (Modern Greek:έκφραση, Ancient Greek:ἔκφρασις). 
 It's a word play between the meaning of the word and the fact that the tool relies heavily on Regular Expressions.
 
-#### References
+References
+===
 
-[1]K. Gimpel et al., “Part-of-speech tagging for twitter: Annotation, features, and experiments,” in Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies: short papers-Volume 2, 2011, pp. 42–47.
+[1] K. Gimpel et al., “Part-of-speech tagging for twitter: Annotation, features, and experiments,” in Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies: short papers-Volume 2, 2011, pp. 42–47.
 
-[2]C. Potts, “Sentiment Symposium Tutorial: Tokenizing,” Sentiment Symposium Tutorial, 2011. [Online]. Available: http://sentiment.christopherpotts.net/tokenizing.html.
+[2] C. Potts, “Sentiment Symposium Tutorial: Tokenizing,” Sentiment Symposium Tutorial, 2011. [Online]. Available: http://sentiment.christopherpotts.net/tokenizing.html.
