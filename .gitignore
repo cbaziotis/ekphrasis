@@ -13,3 +13,4 @@ ekphrasis/stats/twitter/counts_2grams.pickle
 *.pyc
 pypi_push.bat
 /prototyping.py
+/ekphrasis/stats/*
