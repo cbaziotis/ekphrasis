@@ -6,9 +6,10 @@ dist/
 build/
 *.egg-info/
 classes/__pycache__
-stats/english/counts_1grams.pickle
-stats/english/counts_2grams.pickle
-stats/twitter/counts_1grams.pickle
-stats/twitter/counts_2grams.pickle
+ekphrasis/stats/english/counts_1grams.pickle
+ekphrasis/stats/english/counts_2grams.pickle
+ekphrasis/stats/twitter/counts_1grams.pickle
+ekphrasis/stats/twitter/counts_2grams.pickle
 *.pyc
 pypi_push.bat
+/prototyping.py

@@ -1,3 +1,0 @@
-"""
-Created by Christos Baziotis.
-"""
