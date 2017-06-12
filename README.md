@@ -34,7 +34,7 @@ Moreover, you can generate word statistics from your own corpus.
 You can use `ekphrasis/tools/generate_stats.py` and generate statistics from a text file, or a directory that contains a collection of text files.
 For example, in order generate word statistics for [text8](http://mattmahoney.net/dc/textdata.html) (http://mattmahoney.net/dc/text8.zip), you can do:
  
-```python
+```
 python generate_stats.py --input text8.txt --name text8 --ngrams 2 --mincount 70 30
 ```
 * input: path to file or directory containing the files for calculating the statistics.
@@ -57,6 +57,7 @@ You can use the word statistics from one of the 2 provided corpora, or from your
 **Example:**
 In order to perform word segmentation, first you have to instantiate a segmenter with a given corpus, and then just use the `segment()` method:
 ```python
+from ekphrasis.classes.segmenter import Segmenter
 seg = Segmenter(corpus="mycorpus") 
 print(seg.segment("smallandinsignificant"))
 ```
