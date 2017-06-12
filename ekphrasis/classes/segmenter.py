@@ -5,7 +5,8 @@ from math import log10
 from ekphrasis.utils.helpers import read_stats
 
 """
-The Segmenter Class implements the Viterbi algorithm for word segmentation. Based on CH14 from the book Beautiful Data (Segaran and Hammerbacher, 2009)
+The Segmenter Class implements the Viterbi algorithm for word segmentation.
+Based on CH14 from the book Beautiful Data (Segaran and Hammerbacher, 2009)
 """
 
 REGEX_TOKEN = re.compile(r'\b[a-z]{2,}\b')
@@ -126,5 +127,4 @@ class Segmenter:
         print("choosespain: ", self.segment('choosespain'))
         print("speedofart: ", self.segment('speedofart'))
         print("smallandinsignificant: ", self.segment('smallandinsignificant'))
-        print("largeandinsignificant: ", self.segment('largeandinsignificant'))
         # Segmenter().demo()

@@ -8,6 +8,7 @@ from ekphrasis.classes.spellcorrect import SpellCorrector
 from ekphrasis.utils.nlp import unpack_contractions
 
 
+# noinspection PyPackageRequirements
 class TextPreProcessor:
     def __init__(self, **kwargs):
         """

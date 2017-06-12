@@ -27,13 +27,19 @@ def check_empty_arg(value):
     return value
 
 
+def parse_int_list(value):
+    if len(str(value)) == 0:
+        raise argparse.ArgumentTypeError("Invalid argument - no value passed.")
+
+    return [int(x) for x in value.split(",")]
+
 parser = argparse.ArgumentParser()
 
 # add arguments ########################################
-parser.add_argument('--input', nargs='?', type=check_empty_arg, default="D:/_text_data/twitter/",
-                    help='path to file or directory containing the files files for calculating the statistics.')
-parser.add_argument('--name', nargs='?', type=check_empty_arg, default="twitter2", help='')
-parser.add_argument('--ngrams', nargs='+', type=int, default=2, help='up-to how many ngrams to calculate statistics.')
+parser.add_argument('--input', nargs='?', type=check_empty_arg, default="./",
+                    help='path to file or directory containing the files for calculating the statistics.')
+parser.add_argument('--name', nargs='?', type=check_empty_arg, default="mycorpus", help='')
+parser.add_argument('--ngrams', type=int, default=2, help='up-to how many ngrams to calculate statistics.')
 parser.add_argument('--mincount', nargs='+', type=int, default=[60, 25],
                     help='eliminate all ngrams below the given count.')
 parser.add_argument('--perc', nargs='+', type=int, default=0,
@@ -50,6 +56,10 @@ web_parser.add_argument('--no-web-fix', dest='web_fix', action='store_false')
 parser.set_defaults(web_fix=True)
 
 args = parser.parse_args()
+
+args.input = "C:\\Users\\theos\\Downloads\\text8\\"
+args.name = "text8"
+
 
 print(args)
 
@@ -124,7 +134,7 @@ def write_stats(counts):
         print("Writing " + str(k) + "-grams...")
         counter = Counter(counts[k])
         print("entries:{}\t-\ttokens:{}".format(format(len(counter), ','), format(sum(counter.values()), ',')))
-        write_stats_to_file("stats/" + args.name + "/counts_" + str(k) + "grams", counter, args.mincount[int(k) - 1])
+        write_stats_to_file("../stats/" + args.name + "/counts_" + str(k) + "grams", counter, args.mincount[int(k) - 1])
 
 
 def prune_low_freq(word_stats, threshold):

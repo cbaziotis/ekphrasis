@@ -29,7 +29,7 @@ def parse_stats(name, sep='\t', ngram_sep='_'):
 
 def read_stats(corpus, ngram):
     check_stats_files()
-    print("Reading " + "{} - {}grams".format(corpus, ngram))
+    print("Reading " + "{} - {}grams ...".format(corpus, ngram))
     text = path.join(*[stats_dir, corpus, "counts_{}grams.txt".format(ngram)])
     pickled = path.join(*[stats_dir, corpus, "counts_{}grams.pickle".format(ngram)])
 

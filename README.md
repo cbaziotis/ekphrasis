@@ -7,6 +7,7 @@ _DataStories_ team's submission for _SemEval-2017 Task 4 (English), Sentiment An
 
 **Documentation and complete examples will be coming soon.**
 
+
 ## Overview
 
 _ekphrasis_ processes text in two steps: 
@@ -20,11 +21,101 @@ _ekphrasis_ processes text in two steps:
   2. **Post-processing**. After the tokenization you can perform an extra postprocessing step, applying modifications on the extracted tokens.
   This is where you can perform spell correction, word normalization and segmentation and decide which tokens to omit, normalize or annotate (surround or replace with special tags).
 
-### Spell Correction
-The Spell Corrector extends the functionality of Peter Norvig's spell-corrector.
+
+
+
+### Word Statistics
+_ekphrasis_ provides word statistics (unigrams and bigrams) from 2 big corpora:
+* the english Wikipedia
+* a collection of 330 million english Twitter messages
+
+These word statistics are required for the word segmentation and spell correction.
+Moreover, you can generate word statistics from your own corpus.
+You can use `ekphrasis/tools/generate_stats.py` and generate statistics from a text file, or a directory that contains a collection of text files.
+For example, in order generate word statistics for [text8](http://mattmahoney.net/dc/textdata.html) (http://mattmahoney.net/dc/text8.zip), you can do:
+ 
+```python
+python generate_stats.py --input text8.txt --name text8 --ngrams 2 --mincount 70 30
+```
+* input: path to file or directory containing the files for calculating the statistics.
+* name: the name of the corpus.
+* ngrams: up-to how many ngrams to calculate statistics.
+* mincount: the minimum count of each ngram, in order to be included. 
+In this case, the mincount for unigrams is 70 and for bigrams is 30.
+
+After you run the script, you will see a new directory inside `ekphrasis/stats/` with the statistics of your corpus. 
+In the case of the example above, `ekphrasis/stats/text8/`. 
+
+
 
 ### Word Segmentation
-Word Segmentation that implements the Viterbi algorithm for word segmentation. Based on CH14 from the book Beautiful Data (Segaran and Hammerbacher, 2009)
+The word segmentation implementation uses the Viterbi algorithm and is based on [CH14](http://norvig.com/ngrams/ch14.pdf) from the book [Beautiful Data (Segaran and Hammerbacher, 2009)](http://shop.oreilly.com/product/9780596157128.do).
+The implementation requires word statistics in order to identify and separating the words in a string. 
+You can use the word statistics from one of the 2 provided corpora, or from your own corpus.
+
+
+**Example:**
+In order to perform word segmentation, first you have to instantiate a segmenter with a given corpus, and then just use the `segment()` method:
+```python
+seg = Segmenter(corpus="mycorpus") 
+print(seg.segment("smallandinsignificant"))
+```
+```
+> small and insignificant
+```
+
+You can test the output using statistics from the different corpora:
+```python
+from ekphrasis.classes.segmenter import Segmenter
+
+# segmenter using the word statistics from english Wikipedia
+seg_eng = Segmenter(corpus="english") 
+
+# segmenter using the word statistics from Twitter
+seg_tw = Segmenter(corpus="twitter")
+
+words = ["insufficientnumbers", "exponentialbackoff", "sitdown", "gamedev", "retrogaming","thewatercooler", "homonculus"]
+for w in words:
+    print(w)
+    print("(eng):", seg_eng.segment(w))
+    print("(tw):", seg_tw.segment(w))
+    print()
+```
+Output:
+```
+insufficientnumbers
+(eng): insufficient numbers
+(tw): insufficient numbers
+
+exponentialbackoff
+(eng): exponential backoff
+(tw): exponential back off
+
+sitdown
+(eng): sit down
+(tw): sit down
+
+gamedev
+(eng): gamedev
+(tw): game dev
+
+retrogaming
+(eng): retrogaming
+(tw): retro gaming
+
+thewatercooler
+(eng): the water cooler
+(tw): the watercooler
+
+homonculus
+(eng): homonculus
+(tw): ho mon cul us
+
+```
+
+
+### Spell Correction
+The Spell Corrector extends the functionality of Peter Norvig's spell-corrector.
 
 
 

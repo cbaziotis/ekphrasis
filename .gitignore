@@ -9,4 +9,11 @@ classes/__pycache__
 *.pyc
 pypi_push.bat
 /prototyping.py
-/ekphrasis/stats/*
+ekphrasis/__pycache__/
+ekphrasis/classes/__pycache__/
+ekphrasis/dicts/__pycache__/
+ekphrasis/dicts/noslang/__pycache__/
+ekphrasis/examples/.ipynb_checkpoints/
+ekphrasis/examples/word_segmentation-Copy1.ipynb
+ekphrasis/stats/*
+ekphrasis/utils/__pycache__/
