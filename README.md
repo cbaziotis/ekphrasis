@@ -116,7 +116,22 @@ homonculus
 
 
 ### Spell Correction
-The Spell Corrector extends the functionality of Peter Norvig's spell-corrector.
+The Spell Corrector is based on [Peter Norvig's spell-corrector](http://norvig.com/spell-correct.html).
+Just like the segmentation algorithm, we utilize word statistics in order to find the most probable .
+Also, you can use the statistics from the 2 provided corpora or generate your own.
+
+**Example:**
+In a similar fashion you can perform the spell correction.
+First you have to instantiate a `SpellCorrector` object, 
+that uses the statistics from the corpus of your choice and use on of the available methods.
+```python
+from ekphrasis.classes.spellcorrect import SpellCorrector
+sp = SpellCorrector(corpus="english") 
+print(sp.correct("korrect"))
+```
+```
+> correct
+```
 
 
 
