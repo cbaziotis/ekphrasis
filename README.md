@@ -129,6 +129,7 @@ from ekphrasis.classes.spellcorrect import SpellCorrector
 sp = SpellCorrector(corpus="english") 
 print(sp.correct("korrect"))
 ```
+Output:
 ```
 > correct
 ```
