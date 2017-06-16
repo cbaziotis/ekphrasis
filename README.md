@@ -131,9 +131,10 @@ Just like the segmentation algorithm, we utilize word statistics in order to fin
 Besides the provided statistics, you can use your own.
 
 **Example:**
-In a similar fashion you can perform the spell correction.
+
+You can perform the spell correction, just like the word segmentation.
 First you have to instantiate a `SpellCorrector` object, 
-that uses the statistics from the corpus of your choice and use on of the available methods.
+that uses the statistics from the corpus of your choice and then use on of the available methods.
 ```python
 from ekphrasis.classes.spellcorrect import SpellCorrector
 sp = SpellCorrector(corpus="english") 
