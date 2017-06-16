@@ -2,6 +2,7 @@ import re
 from functools import lru_cache
 from math import log10
 
+from ekphrasis.classes.expressions import Expressions
 from ekphrasis.utils.helpers import read_stats
 
 """
@@ -58,6 +59,8 @@ class Segmenter:
 
         self.Pw = Pdist(self.unigrams, self.N, self.unk_probability)
         self.P2w = Pdist(self.bigrams, self.N)
+
+        self.case_split = Expressions().get_compiled()["camel_split"]
 
     def condProbWord(self, word, prev):
         """
@@ -121,10 +124,15 @@ class Segmenter:
     # if you don't have enough RAM lower the maxsize
     @lru_cache(maxsize=524288)
     def segment(self, word):
-        return " ".join(self.find_segment(word)[1])
+        if word.islower():
+            return " ".join(self.find_segment(word)[1])
+        else:
+            return self.case_split.sub(r' \1', word).lower()
 
     def demo(self):
+        print("BBCtest: ", self.segment('BbcTest'))
         print("choosespain: ", self.segment('choosespain'))
         print("speedofart: ", self.segment('speedofart'))
         print("smallandinsignificant: ", self.segment('smallandinsignificant'))
-        # Segmenter().demo()
+
+# Segmenter().demo()

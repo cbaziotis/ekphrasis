@@ -10,16 +10,23 @@ _DataStories_ team's submission for _SemEval-2017 Task 4 (English), Sentiment An
 
 ## Overview
 
-_ekphrasis_ processes text in two steps: 
-  1. **Tokenization**. The difficulty in tokenization is to avoid splitting expressions or words that should be kept intact (as one token).
-  Although there are some tokenizers geared towards Twitter [1],[2] that recognize the Twitter markup 
-  and some basic sentiment expressions or simple emoticons. 
-  Our tokenizer offers additional functionality as it is able to identify most emoticons, emojis, expressions such as 
-  dates (e.g. 07/11/2011, April 23rd), times (e.g. 4:30pm, 11:00 am), currencies (e.g. \$10, 25mil, 50€), acronyms, censored words (e.g. s**t), 
-  words with emphasis (e.g. *very*) and more.
+_ekphrasis_ offers the following functionality:
  
-  2. **Post-processing**. After the tokenization you can perform an extra postprocessing step, applying modifications on the extracted tokens.
-  This is where you can perform spell correction, word normalization and segmentation and decide which tokens to omit, normalize or annotate (surround or replace with special tags).
+  1. **Social Tokenizer**. A text tokenizer geared towards social networks (Facebook, Twitter...), 
+  which understands complex emoticons, emojis and other unstructured expressions like dates, times and more.
+  
+  2. **Word Segmentation**. You can split a long string to its constituent words. Suitable for hashtag segmentation.
+ 
+  3. **Spell Correction**. You can replace a misspelled word, with the most probable candidate word.
+  
+  3. **Customization**. Word Segmentation and Spell Correction mechanisms, operate on top of word statistics, collected from a given corpus.
+  We provide word statistics from 2 big corpora (from Wikipedia and Twitter), but you can also generate word statistics from your own corpus.
+  You may need to do that if you are working with domain-specific texts, like biomedical documents. 
+  For example a word describing a technique or a chemical compound may be treated as a misspelled word, using the word statistics from a general purposed corpus.
+  
+  4. **PreProcessing Pipeline**. You can combine all the above steps in an easy way, 
+  in order to prepare the text files in your dataset for some kind of analysis or for machine learning.
+  In addition, to the aforementioned actions, you can perform text normalization, word annotation (labeling) and more.
 
 
 
@@ -61,6 +68,7 @@ from ekphrasis.classes.segmenter import Segmenter
 seg = Segmenter(corpus="mycorpus") 
 print(seg.segment("smallandinsignificant"))
 ```
+Output:
 ```
 > small and insignificant
 ```
@@ -75,7 +83,7 @@ seg_eng = Segmenter(corpus="english")
 # segmenter using the word statistics from Twitter
 seg_tw = Segmenter(corpus="twitter")
 
-words = ["insufficientnumbers", "exponentialbackoff", "sitdown", "gamedev", "retrogaming","thewatercooler", "homonculus"]
+words = ["exponentialbackoff", "gamedev", "retrogaming", "thewatercooler", "homonculus"]
 for w in words:
     print(w)
     print("(eng):", seg_eng.segment(w))
@@ -84,17 +92,9 @@ for w in words:
 ```
 Output:
 ```
-insufficientnumbers
-(eng): insufficient numbers
-(tw): insufficient numbers
-
 exponentialbackoff
 (eng): exponential backoff
 (tw): exponential back off
-
-sitdown
-(eng): sit down
-(tw): sit down
 
 gamedev
 (eng): gamedev
@@ -114,11 +114,23 @@ homonculus
 
 ```
 
+Finally, if the word is camelCased or PascalCased, then the algorithm splits the words based on the case of the characters.
+```python
+from ekphrasis.classes.segmenter import Segmenter
+seg = Segmenter() 
+print(seg.segment("camelCased"))
+print(seg.segment("PascalCased"))
+```
+Output:
+```
+> camel cased
+> pascal cased
+```
 
 ### Spell Correction
 The Spell Corrector is based on [Peter Norvig's spell-corrector](http://norvig.com/spell-correct.html).
-Just like the segmentation algorithm, we utilize word statistics in order to find the most probable .
-Also, you can use the statistics from the 2 provided corpora or generate your own.
+Just like the segmentation algorithm, we utilize word statistics in order to find the most probable candidate.
+Besides the provided statistics, you can use your own.
 
 **Example:**
 In a similar fashion you can perform the spell correction.
@@ -134,6 +146,16 @@ Output:
 > correct
 ```
 
+
+### Social Tokenizer
+The difficulty in tokenization is to avoid splitting expressions or words that should be kept intact (as one token).
+This is more important in texts from social networks, with "creative" writing and expressions like emoticons, hashtags and so on.
+Although there are some tokenizers geared towards Twitter [1],[2], 
+that recognize the Twitter markup and some basic sentiment expressions or simple emoticons, 
+our tokenizer is able to identify almost all emoticons, emojis, expressions such 
+as dates (e.g. 07/11/2011, April 23rd), times (e.g. 4:30pm, 11:00 am), 
+currencies (e.g. \$10, 25mil, 50\euro), acronyms, censored words (e.g. s**t), 
+words with emphasis (e.g. *very*) and more.
 
 
 ---

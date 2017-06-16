@@ -113,6 +113,8 @@ class TextPreProcessor:
         :return:
         """
         text = m.group()[1:]
+
+        # todo:simplify routine
         if text.islower():
             expanded = self.segmenter.segment(text)
             expanded = " ".join(expanded.split("-"))
