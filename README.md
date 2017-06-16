@@ -157,9 +157,13 @@ currencies (e.g. \$10, 25mil, 50\euro), acronyms, censored words (e.g. s**t),
 words with emphasis (e.g. *very*) and more.
 
 
+<!-- 
+
 ---
 _Ekphrasis_ means expression in Greek (Modern Greek:έκφραση, Ancient Greek:ἔκφρασις). 
- <!--relies on Regular Expression for the text tokenization.-->
+ relies on Regular Expression for the text tokenization.
+ 
+ -->
 
 #### References
 
