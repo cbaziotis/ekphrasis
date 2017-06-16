@@ -5,8 +5,6 @@ using word statistics from 2 big corpora (english Wikipedia, twitter - 330mil en
 _ekphrasis_ was developed as part of the text processing pipeline for
 _DataStories_ team's submission for _SemEval-2017 Task 4 (English), Sentiment Analysis in Twitter_.
 
-**Documentation and complete examples will be coming soon.**
-
 
 ## Overview
 
