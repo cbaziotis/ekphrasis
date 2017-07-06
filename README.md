@@ -8,6 +8,12 @@ _DataStories_ team's submission for _SemEval-2017 Task 4 (English), Sentiment An
 Note: 
 More examples will be coming soon...
 
+## Installation
+```
+pip install ekphrasis
+```
+
+
 ## Overview
 
 _ekphrasis_ offers the following functionality:
