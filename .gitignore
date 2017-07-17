@@ -18,3 +18,4 @@ ekphrasis/examples/word_segmentation-Copy1.ipynb
 ekphrasis/stats/**
 !/**/.gitkeep
 ekphrasis/utils/__pycache__/
+/local_install.bat
