@@ -17,22 +17,22 @@ pip install ekphrasis
 ## Overview
 
 _ekphrasis_ offers the following functionality:
- 
-  1. **Social Tokenizer**. A text tokenizer geared towards social networks (Facebook, Twitter...), 
-  which understands complex emoticons, emojis and other unstructured expressions like dates, times and more.
-  
-  2. **Word Segmentation**. You can split a long string to its constituent words. Suitable for hashtag segmentation.
- 
-  3. **Spell Correction**. You can replace a misspelled word, with the most probable candidate word.
-  
-  3. **Customization**. Word Segmentation and Spell Correction mechanisms, operate on top of word statistics, collected from a given corpus.
-  We provide word statistics from 2 big corpora (from Wikipedia and Twitter), but you can also generate word statistics from your own corpus.
-  You may need to do that if you are working with domain-specific texts, like biomedical documents. 
-  For example a word describing a technique or a chemical compound may be treated as a misspelled word, using the word statistics from a general purposed corpus.
-  
-  4. **PreProcessing Pipeline**. You can combine all the above steps in an easy way, 
-  in order to prepare the text files in your dataset for some kind of analysis or for machine learning.
-  In addition, to the aforementioned actions, you can perform text normalization, word annotation (labeling) and more.
+
+    1. **Social Tokenizer**. A text tokenizer geared towards social networks (Facebook, Twitter...), 
+      which understands complex emoticons, emojis and other unstructured expressions like dates, times and more.
+
+    2. **Word Segmentation**. You can split a long string to its constituent words. Suitable for hashtag segmentation.
+
+    3. **Spell Correction**. You can replace a misspelled word, with the most probable candidate word.
+
+    4. **Customization**. Word Segmentation and Spell Correction mechanisms, operate on top of word statistics, collected from a given corpus.
+      We provide word statistics from 2 big corpora (from Wikipedia and Twitter), but you can also generate word statistics from your own corpus.
+        You may need to do that if you are working with domain-specific texts, like biomedical documents. 
+        For example a word describing a technique or a chemical compound may be treated as a misspelled word, using the word statistics from a general purposed corpus.
+
+    5. **PreProcessing Pipeline**. You can combine all the above steps in an easy way, 
+      in order to prepare the text files in your dataset for some kind of analysis or for machine learning.
+        In addition, to the aforementioned actions, you can perform text normalization, word annotation (labeling) and more.
 
 
 
@@ -46,7 +46,7 @@ These word statistics are required for the word segmentation and spell correctio
 Moreover, you can generate word statistics from your own corpus.
 You can use `ekphrasis/tools/generate_stats.py` and generate statistics from a text file, or a directory that contains a collection of text files.
 For example, in order generate word statistics for [text8](http://mattmahoney.net/dc/textdata.html) (http://mattmahoney.net/dc/text8.zip), you can do:
- 
+
 ```
 python generate_stats.py --input text8.txt --name text8 --ngrams 2 --mincount 70 30
 ```
@@ -54,7 +54,7 @@ python generate_stats.py --input text8.txt --name text8 --ngrams 2 --mincount 70
 * name: the name of the corpus.
 * ngrams: up-to how many ngrams to calculate statistics.
 * mincount: the minimum count of each ngram, in order to be included. 
-In this case, the mincount for unigrams is 70 and for bigrams is 30.
+  In this case, the mincount for unigrams is 70 and for bigrams is 30.
 
 After you run the script, you will see a new directory inside `ekphrasis/stats/` with the statistics of your corpus. 
 In the case of the example above, `ekphrasis/stats/text8/`. 
@@ -159,18 +159,111 @@ The difficulty in tokenization is to avoid splitting expressions or words that s
 This is more important in texts from social networks, with "creative" writing and expressions like emoticons, hashtags and so on.
 Although there are some tokenizers geared towards Twitter [1],[2], 
 that recognize the Twitter markup and some basic sentiment expressions or simple emoticons, 
-our tokenizer is able to identify almost all emoticons, emojis, expressions such 
-as dates (e.g. 07/11/2011, April 23rd), times (e.g. 4:30pm, 11:00 am), 
-currencies (e.g. \$10, 25mil, 50\euro), acronyms, censored words (e.g. s**t), 
-words with emphasis (e.g. *very*) and more.
+our tokenizer is able to identify almost all emoticons, emojis and many complex expressions.
 
+Especially for tasks such as sentiment analysis, there are many expressions that play a decisive role in identifying the sentiment expressed in text. Expressions like these are: 
+
+- Censored words, such as ``f**k``, ``s**t``.
+- Words with emphasis, such as ``a *great* time``, ``I don't *think* I ...``.
+- Emoticons, such as ``>:(``, ``:))``, ``\o/``.
+- Dash-separated words, such as ``over-consumption``, ``anti-american``, ``mind-blowing``.
+
+Moreover, ekphrasis can identify information-bearing  expressions. Depending on the task, you may want to keep preserve / extract them as one token (IR) and then normalize them since this information may be irrelevant for the task (sentiment analysis). Expressions like these are:
+
+
+-   Dates, such as ``Feb 18th``, ``December 2, 2016``, ``December 2-2016``,
+    ``10/17/94``, ``3 December 2016``, ``April 25, 1995``, ``11.15.16``,
+    ``November 24th 2016``, ``January 21st``.
+-   Times, such as ``5:45pm``, ``11:36 AM``, ``2:45 pm``, ``5:30``.
+-   Currencies, such as ``$220M``, ``$2B``, ``$65.000``, ``€10``, ``$50K``.
+-   Phone numbers.
+-   URLs, such as ``http://www.cs.unipi.gr``, ``https://t.co/Wfw5Z1iSEt``.
+
+**Example**:
+
+```python
+def ws_tokenizer(text):
+    return text.split()
+
+
+social_tokenizer = SocialTokenizer(lowercase=False).tokenize
+
+for s in demo_sents:
+    print()
+    print("ORG: ", s)  # original sentence
+    print("WP : ", ws_tokenizer(s))  # whitespace tokenizer
+    print("SC : ", social_tokenizer(s))  # social tokenizer
+```
+
+Output:
+
+
+
+## Text Pre-Processing pipeline
+
+You can easily define a preprocessing pipeline, by using the ``TextPreProcessor``. 
+
+```python
+text_processor = TextPreProcessor(
+    # terms that will be normalized
+    backoff=['url', 'email', 'percent', 'money', 'phone', 'user',
+        'time', 'url', 'date', 'number'],
+    # terms that will be annotated
+    include_tags={"hashtag", "allcaps", "elongated", "repeated",
+        'emphasis', 'censored'},
+    fix_html=True,  # fix HTML tokens
+    
+    # corpus from wich the word statistics are going to be used 
+    # for word segmentation 
+    segmenter="twitter", 
+    
+    # corpus from wich the word statistics are going to be used 
+    # for spell correction
+    corrector="twitter", 
+    
+    unpack_hashtags=True,  # perform word segmentation on hashtags
+    
+    unpack_contractions=True,  # Unpack contractions (can't -> can not)
+    spell_correct_elong=False,  # spell correction for elongated words
+    
+    # select a tokenizer. You can use SocialTokenizer, or pass your own
+    # the tokenizer, should take as input a string and return a list of tokens
+    tokenizer=SocialTokenizer(lowercase=True).tokenize,
+    
+    # list of dictionaries, for replacing tokens extracted from the text,
+    # with other expressions. You can pass more than one dictionaries.
+    dicts=[emoticons]
+)
+
+sentences = [
+    "can't wait for the NEW SEASON of #TwinPeaks ＼(^o^)／ !!! #davidlynch #tvseries :))) ",
+    "I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies >3:/"
+]
+
+for s in sentences:
+    print(" ".join(text_processor.pre_process_doc(s)))
+```
+
+Output:
+
+```
+can not wait for the new <allcaps> season <allcaps> of <hashtag> twin peaks </hashtag> ＼(^o^)／ ! <repeated> <hashtag> david lynch </hashtag> <hashtag> tv series </hashtag> :)))
+
+i saw the new <hashtag> john doe </hashtag> movie and it sucks <elongated> ! <repeated> waisted <allcaps> <money> . <repeated> <hashtag> bad movies </hashtag> > <number> <annoyed>
+```
+
+
+
+Notes:
+
+elongated words are automatically normalized.
 
 <!-- 
 
 ---
 _Ekphrasis_ means expression in Greek (Modern Greek:έκφραση, Ancient Greek:ἔκφρασις). 
  relies on Regular Expression for the text tokenization.
- 
+
  -->
 
 #### References

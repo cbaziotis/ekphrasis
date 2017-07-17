@@ -145,7 +145,7 @@ class TextPreProcessor:
         if normalized:
             text = normalized
 
-        # # try to spell correct the word
+        # try to spell correct the word
         if self.spell_correct_elong:
             text = self.spell_corrector.correct_word(text, assume_wrong=True, fast=True)
             # with open("analysis/spell_corrector_" + self.corrector_corpus + ".txt", "a") as f:
