@@ -18,21 +18,17 @@ pip install ekphrasis
 
 _ekphrasis_ offers the following functionality:
 
-    1. **Social Tokenizer**. A text tokenizer geared towards social networks (Facebook, Twitter...), 
+  1. **Social Tokenizer**. A text tokenizer geared towards social networks (Facebook, Twitter...), 
       which understands complex emoticons, emojis and other unstructured expressions like dates, times and more.
 
-    2. **Word Segmentation**. You can split a long string to its constituent words. Suitable for hashtag segmentation.
+  2. **Word Segmentation**. You can split a long string to its constituent words. Suitable for hashtag segmentation.
 
-    3. **Spell Correction**. You can replace a misspelled word, with the most probable candidate word.
+  3. **Spell Correction**. You can replace a misspelled word, with the most probable candidate word.
 
-    4. **Customization**. Word Segmentation and Spell Correction mechanisms, operate on top of word statistics, collected from a given corpus.
-      We provide word statistics from 2 big corpora (from Wikipedia and Twitter), but you can also generate word statistics from your own corpus.
-        You may need to do that if you are working with domain-specific texts, like biomedical documents. 
-        For example a word describing a technique or a chemical compound may be treated as a misspelled word, using the word statistics from a general purposed corpus.
+  4. **Customization**. Word Segmentation and Spell Correction mechanisms, operate on top of word statistics, collected from a given corpus. We provide word statistics from 2 big corpora (from Wikipedia and Twitter), but you can also generate word statistics from your own corpus. You may need to do that if you are working with domain-specific texts, like biomedical documents. For example a word describing a technique or a chemical compound may be treated as a misspelled word, using the word statistics from a general purposed corpus.
 
-    5. **PreProcessing Pipeline**. You can combine all the above steps in an easy way, 
-      in order to prepare the text files in your dataset for some kind of analysis or for machine learning.
-        In addition, to the aforementioned actions, you can perform text normalization, word annotation (labeling) and more.
+  5. **Pre-Processing Pipeline**. You can combine all the above steps in an easy way, in order to prepare the text files in your dataset for some kind of analysis or for machine learning.
+  In addition, to the aforementioned actions, you can perform text normalization, word annotation (labeling) and more.
 
 
 
