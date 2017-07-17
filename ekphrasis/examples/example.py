@@ -8,8 +8,8 @@ def ws_tokenizer(text):
 
 
 text_processor = TextPreProcessor(
-    backoff=['url', 'email', 'percent', 'money', 'phone', 'user', 'time', 'url', 'date', 'number'],
-    include_tags={"hashtag", "allcaps", "elongated", "repeated", 'emphasis', 'censored'},
+    normalize=['url', 'email', 'percent', 'money', 'phone', 'user', 'time', 'url', 'date', 'number'],
+    annotate={"hashtag", "allcaps", "elongated", "repeated", 'emphasis', 'censored'},
     fix_text=True,
     segmenter="twitter",
     corrector="twitter",

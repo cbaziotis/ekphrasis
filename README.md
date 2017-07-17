@@ -8,13 +8,13 @@ _DataStories_ team's submission for _SemEval-2017 Task 4 (English), Sentiment An
 Note: 
 More examples will be coming soon...
 
-## Installation
+# Installation
 ```
 pip install ekphrasis
 ```
 
 
-## Overview
+# Overview
 
 _ekphrasis_ offers the following functionality:
 
@@ -36,6 +36,66 @@ _ekphrasis_ offers the following functionality:
 
 
 
+
+## Text Pre-Processing pipeline
+
+You can easily define a preprocessing pipeline, by using the ``TextPreProcessor``. 
+
+```python
+text_processor = TextPreProcessor(
+    # terms that will be normalized
+    normalize=['url', 'email', 'percent', 'money', 'phone', 'user',
+        'time', 'url', 'date', 'number'],
+    # terms that will be annotated
+    annotate={"hashtag", "allcaps", "elongated", "repeated",
+        'emphasis', 'censored'},
+    fix_html=True,  # fix HTML tokens
+    
+    # corpus from wich the word statistics are going to be used 
+    # for word segmentation 
+    segmenter="twitter", 
+    
+    # corpus from wich the word statistics are going to be used 
+    # for spell correction
+    corrector="twitter", 
+    
+    unpack_hashtags=True,  # perform word segmentation on hashtags
+    unpack_contractions=True,  # Unpack contractions (can't -> can not)
+    spell_correct_elong=False,  # spell correction for elongated words
+    
+    # select a tokenizer. You can use SocialTokenizer, or pass your own
+    # the tokenizer, should take as input a string and return a list of tokens
+    tokenizer=SocialTokenizer(lowercase=True).tokenize,
+    
+    # list of dictionaries, for replacing tokens extracted from the text,
+    # with other expressions. You can pass more than one dictionaries.
+    dicts=[emoticons]
+)
+
+sentences = [
+    "can't wait for the NEW SEASON of #TwinPeaks ＼(^o^)／ !!! #davidlynch #tvseries :))) ",
+    "I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies >3:/"
+]
+
+for s in sentences:
+    print(" ".join(text_processor.pre_process_doc(s)))
+```
+
+Output:
+
+```
+can not wait for the new <allcaps> season <allcaps> of <hashtag> twin peaks </hashtag> ＼(^o^)／ ! <repeated> <hashtag> david lynch </hashtag> <hashtag> tv series </hashtag> :)))
+
+i saw the new <hashtag> john doe </hashtag> movie and it sucks <elongated> ! <repeated> waisted <allcaps> <money> . <repeated> <hashtag> bad movies </hashtag> > <number> <annoyed>
+```
+
+
+Notes:
+
+* elongated words are automatically normalized.
+* Spell correction affects performance.
+
+---
 
 ### Word Statistics
 _ekphrasis_ provides word statistics (unigrams and bigrams) from 2 big corpora:
@@ -197,66 +257,17 @@ for s in demo_sents:
 
 Output:
 
-
-
-## Text Pre-Processing pipeline
-
-You can easily define a preprocessing pipeline, by using the ``TextPreProcessor``. 
-
-```python
-text_processor = TextPreProcessor(
-    # terms that will be normalized
-    backoff=['url', 'email', 'percent', 'money', 'phone', 'user',
-        'time', 'url', 'date', 'number'],
-    # terms that will be annotated
-    include_tags={"hashtag", "allcaps", "elongated", "repeated",
-        'emphasis', 'censored'},
-    fix_html=True,  # fix HTML tokens
-    
-    # corpus from wich the word statistics are going to be used 
-    # for word segmentation 
-    segmenter="twitter", 
-    
-    # corpus from wich the word statistics are going to be used 
-    # for spell correction
-    corrector="twitter", 
-    
-    unpack_hashtags=True,  # perform word segmentation on hashtags
-    
-    unpack_contractions=True,  # Unpack contractions (can't -> can not)
-    spell_correct_elong=False,  # spell correction for elongated words
-    
-    # select a tokenizer. You can use SocialTokenizer, or pass your own
-    # the tokenizer, should take as input a string and return a list of tokens
-    tokenizer=SocialTokenizer(lowercase=True).tokenize,
-    
-    # list of dictionaries, for replacing tokens extracted from the text,
-    # with other expressions. You can pass more than one dictionaries.
-    dicts=[emoticons]
-)
-
-sentences = [
-    "can't wait for the NEW SEASON of #TwinPeaks ＼(^o^)／ !!! #davidlynch #tvseries :))) ",
-    "I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies >3:/"
-]
-
-for s in sentences:
-    print(" ".join(text_processor.pre_process_doc(s)))
 ```
+ORG:  CANT WAIT for the new season of #TwinPeaks ＼(^o^)／ yaaaay!!! #davidlynch #tvseries :))) 
+WP :  ['CANT', 'WAIT', 'for', 'the', 'new', 'season', 'of', '#TwinPeaks', '＼(^o^)／', 'yaaaay!!!', '#davidlynch', '#tvseries', ':)))']
+SC :  ['CANT', 'WAIT', 'for', 'the', 'new', 'season', 'of', '#TwinPeaks', '＼(^o^)／', 'yaaaay', '!', '!', '!', '#davidlynch', '#tvseries', ':)))']
 
-Output:
-
-```
-can not wait for the new <allcaps> season <allcaps> of <hashtag> twin peaks </hashtag> ＼(^o^)／ ! <repeated> <hashtag> david lynch </hashtag> <hashtag> tv series </hashtag> :)))
-
-i saw the new <hashtag> john doe </hashtag> movie and it sucks <elongated> ! <repeated> waisted <allcaps> <money> . <repeated> <hashtag> bad movies </hashtag> > <number> <annoyed>
+ORG:  I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies >3:/
+WP :  ['I', 'saw', 'the', 'new', '#johndoe', 'movie', 'and', 'it', 'suuuuucks!!!', 'WAISTED', '$10...', '#badmovies', '>3:/']
+SC :  ['I', 'saw', 'the', 'new', '#johndoe', 'movie', 'and', 'it', 'suuuuucks', '!', '!', '!', 'WAISTED', '$10', '.', '.', '.', '#badmovies', '>', '3:/']
 ```
 
 
-
-Notes:
-
-elongated words are automatically normalized.
 
 <!-- 
 

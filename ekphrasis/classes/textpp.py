@@ -19,7 +19,7 @@ class TextPreProcessor:
                             1 - put url at front, if you plan to use it. Messes with the regexes!
                             2 - if you use hashtag then unpack_hashtags will automatically be set to False
 
-            backoff (list): choose what tokens that you want to backoff from the text.
+            normalize (list): choose what tokens that you want to normalize from the text.
                 possible values: ['email', 'percent', 'money', 'phone', 'user', 'time', 'url', 'date', 'hashtag']
                 for example: myaddress@mysite.com will be transformed to <email>
                 Important Notes:
@@ -32,7 +32,7 @@ class TextPreProcessor:
             unpack_hashtags (bool): split a hashtag to it's constituent words.
                 for example: #ilikedogs -> i like dogs
 
-            include_tags (list): add special tags to special tokens.
+            annotate (list): add special tags to special tokens.
                 possible values: ['hashtag', 'allcaps', 'elongated', 'repeated']
                 for example: myaddress@mysite.com -> myaddress@mysite.com <email>
 
@@ -53,8 +53,8 @@ class TextPreProcessor:
             fix_text (bool): choose if you want to fix bad unicode terms and html entities.
         """
         self.omit = kwargs.get("omit", {})
-        self.backoff = kwargs.get("backoff", {})
-        self.include_tags = kwargs.get("include_tags", {})
+        self.backoff = kwargs.get("normalize", {})
+        self.include_tags = kwargs.get("annotate", {})
         self.unpack_contractions = kwargs.get("unpack_contractions", False)
         self.tokenizer = kwargs.get("tokenizer", None)
         self.dicts = kwargs.get("dicts", None)
