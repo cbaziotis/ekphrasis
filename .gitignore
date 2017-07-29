@@ -7,7 +7,6 @@ build/
 *.egg-info/
 classes/__pycache__
 *.pyc
-pypi_push.bat
 /prototyping.py
 ekphrasis/__pycache__/
 ekphrasis/classes/__pycache__/

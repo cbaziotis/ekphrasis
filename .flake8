@@ -1,0 +1,28 @@
+[flake8]
+max-line-length = 120
+
+exclude =
+    .tox,
+    __pycache__,
+    build,
+    dist
+
+ignore =
+    # F401 imported but unused
+    F401,
+    # E501 line too long
+    E501,
+    # E303 too many blank lines
+    E303,
+    # E731 do not assign a lambda expression, use a def
+    E731,
+    # F812: list comprehension redefines ...
+    F812,
+    # E402 module level import not at top of file
+    E402,
+    # W292 no newline at end of file
+    W292,
+    # E999 SyntaxError: invalid syntax
+    E999,
+    # F821 undefined name
+    F821,
