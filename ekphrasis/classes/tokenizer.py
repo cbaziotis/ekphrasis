@@ -4,25 +4,114 @@ import re
 import colorama
 from termcolor import colored
 
-from ekphrasis.classes.expressions import Expressions
+from ekphrasis.classes.exmanager import ExManager
+
+
+class Tokenizer:
+    social_pipeline = [
+        "EMOJI_UCS4", "URL", "TAG", "EMAIL", "USER", "HASHTAG",
+        "CASHTAG", "PHONE", "PERCENT", "MONEY", "DATE", "TIME",
+        "ACRONYM", "LTR_FACE", "RTL_FACE", "CENSORED", "EMPHASIS",
+        "REST_EMOTICONS", "NUMBER", "WORD", "EASTERN_EMOTICONS",
+    ]
+    default_pipeline = social_pipeline
+
+    def __init__(self, pipeline=None, lowercase=False, verbose=False,
+                 debug=False):
+        """
+        Args:
+            pipeline (list): list of terms to use for tokenization.
+                Each term, is a key from the dict of regexes `expressions.txt`.
+                Order matters!
+            lowercase (bool): set to True in order to lowercase the text
+            verbose (bool): set to True to print each text after tokenization.
+                Useful for debugging purposes.
+            debug (bool): set to True in order to pause after tokenizing
+                each text (wait for pressing any key).
+                Useful for debugging purposes, if you want to inspect each text
+                as is processed.
+        """
+        self.lowercase = lowercase
+        self.debug = debug
+        self.verbose = verbose
+        colorama.init(autoreset=False, convert=False, strip=False, wrap=True)
+
+        self.pipeline = []
+
+        self.regexes = ExManager().expressions
+
+        if pipeline is None:
+            pipeline = self.default_pipeline
+
+        self.build(pipeline)
+
+        self.pipeline.append("(?:\S)")  # CATCH ALL remaining terms
+        self.tok = re.compile(r"({})".format("|".join(self.pipeline)))
+
+    def add_to_pipeline(self, term):
+        # todo: don't wrap all terms
+        self.pipeline.append(self.wrap_non_matching(self.regexes[term]))
+
+    def build(self, pipeline):
+        for term in pipeline:
+            if term.lower().startswith("emoji"):
+                try:
+                    re.compile(self.regexes["EMOJI_UCS4"])
+                    self.add_to_pipeline("EMOJI_UCS4")
+                except re.error:
+                    re.compile(self.regexes["EMOJI_UCS2"])
+                    self.add_to_pipeline("EMOJI_UCS2")
+            else:
+                self.add_to_pipeline(term)
+
+    @staticmethod
+    def wrap_non_matching(exp):
+        return "(?:{})".format(exp)
+
+    def verbose_text(self, text, tokenized):
+        # print(text.rstrip())
+        for term in tokenized:
+            print(colored(term, 'red', attrs=["underline"]), end=" ")
+        print()
+        if self.debug:
+            input()
+        else:
+            print()
+
+    def tokenize(self, text):
+        escaped = html.unescape(text)
+        tokenized = self.tok.findall(escaped)
+
+        if self.verbose:
+            self.verbose_text(text, tokenized)
+
+        if self.lowercase:
+            tokenized = [t.lower() for t in tokenized]
+
+        return tokenized
 
 
 class SocialTokenizer:
     """
-    A parametric tokenizer that understands many expression found in natural language such as hashtags, dates, times, emoticons and much more.
+    **Deprecated**
+
+    A parametric tokenizer that understands many expression found in natural
+    language such as hashtags, dates, times, emoticons and much more.
     """
 
     def __init__(self, lowercase=False, verbose=False, debug=False, **kwargs):
         """
 
-        :param lowercase: set to True in order to lowercase the text
-        :param verbose: set to True to print each text after tokenization. Useful for debugging purposes.
-        :param debug: set to True in order to pause after tokenizing each text (wait for pressing any key).
-                Useful for debugging purposes, if you want to inspect each text as it goes.
-        :param kwargs:
-            See below
+        Args:
+            lowercase (bool): set to True in order to lowercase the text
+            verbose (bool): set to True to print each text after tokenization.
+                Useful for debugging purposes.
+            debug (bool): set to True in order to pause after tokenizing
+                each text (wait for pressing any key).
+                Useful for debugging purposes, if you want to inspect each text
+                as is processed.
 
-        :Keyword Arguments:
+        Kwargs ():
             emojis (bool): True to keep emojis
             urls (bool): True to keep urls
             tags (bool): True to keep tags: <tag>
@@ -41,12 +130,13 @@ class SocialTokenizer:
             emphasis (bool): True to keep words with emphasis: *very* good
             numbers (bool): True to keep numbers
         """
+
         self.lowercase = lowercase
         self.debug = debug
         self.verbose = verbose
         colorama.init(autoreset=False, convert=False, strip=False, wrap=True)
         pipeline = []
-        self.regexes = Expressions().EXPRESSIONS
+        self.regexes = ExManager().expressions
 
         emojis = kwargs.get("emojis", True)
         urls = kwargs.get("urls", True)
@@ -125,17 +215,19 @@ class SocialTokenizer:
 
         # <3 ^5
         if emoticons:
-            pipeline.append(self.wrap_non_matching(self.regexes["REST_EMOTICONS"]))
+            pipeline.append(
+                self.wrap_non_matching(self.regexes["REST_EMOTICONS"]))
 
         if numbers:
             pipeline.append(self.regexes["NUMBER"])
 
         # any other word
-        pipeline.append(r"(?:[\w_]+)")
+        pipeline.append(self.regexes["WORD"])
 
         # EASTERN EMOTICONS - (^_^;)   (>_<)>  ＼(^o^)／
         if emoticons:
-            pipeline.append(self.wrap_non_matching(self.regexes["EASTERN_EMOTICONS"]))
+            pipeline.append(
+                self.wrap_non_matching(self.regexes["EASTERN_EMOTICONS"]))
 
         # keep repeated puncts as one term
         # pipeline.append(r"")
@@ -170,8 +262,7 @@ class SocialTokenizer:
 
         return tokenized
 
-
-sentences = []
+# sentences = []
 
 # [print(s) for s in sentences]
 # tokenizer = SocialTokenizer(debug=True, verbose=True)

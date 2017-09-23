@@ -1,4 +1,4 @@
-from ekphrasis.classes.textpp import TextPreProcessor
+from ekphrasis.classes.preprocessor import TextPreProcessor
 from ekphrasis.classes.tokenizer import SocialTokenizer
 from ekphrasis.dicts.emoticons import emoticons
 

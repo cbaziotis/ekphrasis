@@ -2,7 +2,7 @@ import re
 from functools import lru_cache
 from math import log10
 
-from ekphrasis.classes.expressions import Expressions
+from ekphrasis.classes.exmanager import ExManager
 from ekphrasis.utils.helpers import read_stats
 
 """
@@ -47,9 +47,13 @@ class Pdist(dict):
 class Segmenter:
     def __init__(self, corpus="english", max_split_length=20):
         """
-        :param corpus: the statistics from which corpus to use for the spell correction.
-        :param max_split_length: the maximum length of that a word can have for looking for splits
+        Args:
+            corpus (str): the statistics from which corpus to use for
+                the spell correction.
+            max_split_length (int): the maximum length of that a word can have
+                for looking for splits
         """
+
         # self.unigrams = Counter(read_stats(corpus, 1))
         # self.bigrams = Counter(read_stats(corpus, 2))
         self.unigrams = read_stats(corpus, 1)
@@ -60,15 +64,18 @@ class Segmenter:
         self.Pw = Pdist(self.unigrams, self.N, self.unk_probability)
         self.P2w = Pdist(self.bigrams, self.N)
 
-        self.case_split = Expressions().get_compiled()["camel_split"]
+        self.case_split = ExManager().get_compiled()["camel_split"]
 
     def condProbWord(self, word, prev):
         """
         Conditional probability of word, given previous word
         if bigram is not in our list, then fall back to unigrams
-        :param word: candidate word
-        :param prev: previous observed word
-        :return:
+        Args:
+            word (): candidate word
+            prev (): previous observed word
+
+        Returns:
+
         """
         try:
             return self.P2w[prev + NGRAM_SEP + word] / float(self.Pw[prev])

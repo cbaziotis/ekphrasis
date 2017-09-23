@@ -2,7 +2,7 @@ from functools import lru_cache
 
 import ftfy
 
-from ekphrasis.classes.expressions import Expressions
+from ekphrasis.classes.exmanager import ExManager
 from ekphrasis.classes.segmenter import Segmenter
 from ekphrasis.classes.spellcorrect import SpellCorrector
 from ekphrasis.utils.nlp import unpack_contractions
@@ -14,19 +14,27 @@ class TextPreProcessor:
         """
         Kwargs:
             omit (list): choose what tokens that you want to omit from the text.
-                possible values: ['email', 'percent', 'money', 'phone', 'user', 'time', 'url', 'date', 'hashtag']
+                possible values: ['email', 'percent', 'money', 'phone', 'user',
+                    'time', 'url', 'date', 'hashtag']
                 Important Notes:
-                            1 - put url at front, if you plan to use it. Messes with the regexes!
-                            2 - if you use hashtag then unpack_hashtags will automatically be set to False
+                            1 - put url at front, if you plan to use it.
+                                Messes with the regexes!
+                            2 - if you use hashtag then unpack_hashtags will
+                                automatically be set to False
 
-            normalize (list): choose what tokens that you want to normalize from the text.
-                possible values: ['email', 'percent', 'money', 'phone', 'user', 'time', 'url', 'date', 'hashtag']
+            normalize (list): choose what tokens that you want to normalize
+                from the text.
+                possible values: ['email', 'percent', 'money', 'phone', 'user',
+                    'time', 'url', 'date', 'hashtag']
                 for example: myaddress@mysite.com will be transformed to <email>
                 Important Notes:
-                            1 - put url at front, if you plan to use it. Messes with the regexes!
-                            2 - if you use hashtag then unpack_hashtags will automatically be set to False
+                            1 - put url at front, if you plan to use it.
+                                Messes with the regexes!
+                            2 - if you use hashtag then unpack_hashtags will
+                                automatically be set to False
 
-            unpack_contractions (bool): Replace *English* contractions in ``text`` str with their unshortened forms
+            unpack_contractions (bool): Replace *English* contractions in
+                ``text`` str with their unshortened forms
                 for example: can't -> can not, wouldn't -> would not, and so on...
 
             unpack_hashtags (bool): split a hashtag to it's constituent words.
@@ -36,21 +44,26 @@ class TextPreProcessor:
                 possible values: ['hashtag', 'allcaps', 'elongated', 'repeated']
                 for example: myaddress@mysite.com -> myaddress@mysite.com <email>
 
-            tokenizer (callable): callable function that accepts a string and returns a list of strings
-                                if no tokenizer is provided then the text will be tokenized on whitespace
+            tokenizer (callable): callable function that accepts a string and
+                returns a list of strings if no tokenizer is provided then
+                the text will be tokenized on whitespace
 
-            segmenter (str): define the statistics of what corpus you would like to use [english, twitter]
+            segmenter (str): define the statistics of what corpus you would
+                like to use [english, twitter]
 
-            corrector (str): define the statistics of what corpus you would like to use [english, twitter]
+            corrector (str): define the statistics of what corpus you would
+                like to use [english, twitter]
 
-            spell_correct_elong (bool): choose if you want to perform spell correction after the normalization of
-                elongated words.
+            spell_correct_elong (bool): choose if you want to perform
+                spell correction after the normalization of elongated words.
                 * significantly affects performance (speed)
 
-            spell_correction (bool): choose if you want to perform spell correction to the text
+            spell_correction (bool): choose if you want to perform
+                spell correction to the text
                 * significantly affects performance (speed)
 
-            fix_text (bool): choose if you want to fix bad unicode terms and html entities.
+            fix_text (bool): choose if you want to fix bad unicode terms and
+                html entities.
         """
         self.omit = kwargs.get("omit", {})
         self.backoff = kwargs.get("normalize", {})
@@ -71,7 +84,7 @@ class TextPreProcessor:
         if self.mode != "fast":
             self.spell_corrector = SpellCorrector(corpus=self.corrector_corpus)
 
-        self.regexes = Expressions().get_compiled()
+        self.regexes = ExManager().get_compiled()
         if 'hashtag' in self.omit or 'hashtag' in self.backoff:
             print("You can't omit/backoff and unpack hashtags!\n unpack_hashtags will be set to False")
             self.unpack_hashtags = False
@@ -84,12 +97,6 @@ class TextPreProcessor:
 
     @staticmethod
     def add_special_tag(m, tag, mode="single"):
-        """
-        :param mode:
-        :param tag:
-        :param m: the match
-        :return:
-        """
 
         if isinstance(m, str):
             text = m
@@ -109,8 +116,6 @@ class TextPreProcessor:
     def handle_hashtag_match(self, m):
         """
         Break a string to its constituent words (using Viterbi algorithm)
-        :param m:
-        :return:
         """
         text = m.group()[1:]
 

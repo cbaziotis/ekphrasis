@@ -1,19 +1,10 @@
 """
 Created by Christos Baziotis.
 """
-import nltk
+from ekphrasis.classes.tokenizer import SocialTokenizer
 
-from ekphrasis.classes.tokenizer import SocialTokenizer, Tokenizer
-
-
-def wsp_tokenizer(text):
-    return text.split(" ")
-
-
-puncttok = nltk.WordPunctTokenizer().tokenize
 
 social_tokenizer = SocialTokenizer(lowercase=False).tokenize
-mytokenizer = Tokenizer(lowercase=False).tokenize
 
 sents = [
     "CANT WAIT for the new season of #TwinPeaks ＼(^o^)／ yaaaay!!! #davidlynch #tvseries :)))",
@@ -22,9 +13,4 @@ sents = [
 ]
 
 for s in sents:
-    print()
-    print("ORG: ", s)  # original sentence
-    # print("WSP : ", wsp_tokenizer(s))  # whitespace tokenizer
-    # print("WPU : ", puncttok(s))  # WordPunct tokenizer
     print("SC : ", social_tokenizer(s))  # social tokenizer
-    print("SC : ", mytokenizer(s))  # social tokenizer

@@ -25,7 +25,11 @@ _ekphrasis_ offers the following functionality:
 
   3. **Spell Correction**. You can replace a misspelled word, with the most probable candidate word.
 
-  4. **Customization**. Word Segmentation and Spell Correction mechanisms, operate on top of word statistics, collected from a given corpus. We provide word statistics from 2 big corpora (from Wikipedia and Twitter), but you can also generate word statistics from your own corpus. You may need to do that if you are working with domain-specific texts, like biomedical documents. For example a word describing a technique or a chemical compound may be treated as a misspelled word, using the word statistics from a general purposed corpus.
+  4. **Customization**. Taylor the word-segmentation, spell-correction and term identification, to suit your needs.
+  
+      Word Segmentation and Spell Correction mechanisms, operate on top of word statistics, collected from a given corpus. We provide word statistics from 2 big corpora (from Wikipedia and Twitter), but you can also generate word statistics from your own corpus. You may need to do that if you are working with domain-specific texts, like biomedical documents. For example a word describing a technique or a chemical compound may be treated as a misspelled word, using the word statistics from a general purposed corpus.
+
+      _ekphrasis_ tokenizes the text based on a list of regular expressions. You can easily enable _ekphrasis_ to identify new entities, by simply adding a new entry to the dictionary of regular expressions (`ekphrasis/regexes/expressions.txt`).
 
   5. **Pre-Processing Pipeline**. You can combine all the above steps in an easy way, in order to prepare the text files in your dataset for some kind of analysis or for machine learning.
   In addition, to the aforementioned actions, you can perform text normalization, word annotation (labeling) and more.
@@ -38,6 +42,10 @@ _ekphrasis_ offers the following functionality:
 You can easily define a preprocessing pipeline, by using the ``TextPreProcessor``. 
 
 ```python
+from ekphrasis.classes.preprocessor import TextPreProcessor
+from ekphrasis.classes.tokenizer import SocialTokenizer
+from ekphrasis.dicts.emoticons import emoticons
+
 text_processor = TextPreProcessor(
     # terms that will be normalized
     normalize=['url', 'email', 'percent', 'money', 'phone', 'user',
@@ -238,28 +246,43 @@ Moreover, ekphrasis can identify information-bearing  expressions. Depending on 
 **Example**:
 
 ```python
-def ws_tokenizer(text):
-    return text.split()
+import nltk
+from ekphrasis.classes.tokenizer import SocialTokenizer
 
+
+def wsp_tokenizer(text):
+    return text.split(" ")
+
+puncttok = nltk.WordPunctTokenizer().tokenize
 
 social_tokenizer = SocialTokenizer(lowercase=False).tokenize
 
-for s in demo_sents:
+sents = [
+    "CANT WAIT for the new season of #TwinPeaks ＼(^o^)／ yaaaay!!! #davidlynch #tvseries :)))",
+    "I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies >3:/",
+    "@SentimentSymp:  can't wait for the Nov 9 #Sentiment talks!  YAAAAAAY !!! >:-D http://sentimentsymposium.com/.",
+]
+
+for s in sents:
     print()
     print("ORG: ", s)  # original sentence
-    print("WP : ", ws_tokenizer(s))  # whitespace tokenizer
+    print("WSP : ", wsp_tokenizer(s))  # whitespace tokenizer
+    print("WPU : ", puncttok(s))  # WordPunct tokenizer
     print("SC : ", social_tokenizer(s))  # social tokenizer
+
 ```
 
 Output:
 
 ```
-ORG:  CANT WAIT for the new season of #TwinPeaks ＼(^o^)／ yaaaay!!! #davidlynch #tvseries :))) 
-WP :  ['CANT', 'WAIT', 'for', 'the', 'new', 'season', 'of', '#TwinPeaks', '＼(^o^)／', 'yaaaay!!!', '#davidlynch', '#tvseries', ':)))']
+ORG:  CANT WAIT for the new season of #TwinPeaks ＼(^o^)／ yaaaay!!! #davidlynch #tvseries :)))
+WSP :  ['CANT', 'WAIT', 'for', 'the', 'new', 'season', 'of', '#TwinPeaks', '＼(^o^)／', 'yaaaay!!!', '#davidlynch', '#tvseries', ':)))']
+WPU :  ['CANT', 'WAIT', 'for', 'the', 'new', 'season', 'of', '#', 'TwinPeaks', '＼(^', 'o', '^)／', 'yaaaay', '!!!', '#', 'davidlynch', '#', 'tvseries', ':)))']
 SC :  ['CANT', 'WAIT', 'for', 'the', 'new', 'season', 'of', '#TwinPeaks', '＼(^o^)／', 'yaaaay', '!', '!', '!', '#davidlynch', '#tvseries', ':)))']
 
 ORG:  I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies >3:/
-WP :  ['I', 'saw', 'the', 'new', '#johndoe', 'movie', 'and', 'it', 'suuuuucks!!!', 'WAISTED', '$10...', '#badmovies', '>3:/']
+WSP :  ['I', 'saw', 'the', 'new', '#johndoe', 'movie', 'and', 'it', 'suuuuucks!!!', 'WAISTED', '$10...', '#badmovies', '>3:/']
+WPU :  ['I', 'saw', 'the', 'new', '#', 'johndoe', 'movie', 'and', 'it', 'suuuuucks', '!!!', 'WAISTED', '$', '10', '...', '#', 'badmovies', '>', '3', ':/']
 SC :  ['I', 'saw', 'the', 'new', '#johndoe', 'movie', 'and', 'it', 'suuuuucks', '!', '!', '!', 'WAISTED', '$10', '.', '.', '.', '#badmovies', '>', '3:/']
 ```
 

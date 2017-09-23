@@ -31,7 +31,8 @@ def read_stats(corpus, ngram):
     check_stats_files()
     print("Reading " + "{} - {}grams ...".format(corpus, ngram))
     text = path.join(*[stats_dir, corpus, "counts_{}grams.txt".format(ngram)])
-    pickled = path.join(*[stats_dir, corpus, "counts_{}grams.pickle".format(ngram)])
+    pickled = path.join(
+        *[stats_dir, corpus, "counts_{}grams.pickle".format(ngram)])
 
     if os.path.isfile(pickled):
         with open(pickled, "rb") as f:
@@ -48,12 +49,12 @@ def read_stats(corpus, ngram):
         sys.exit(1)
 
 
+def listdir_nohidden(path):
+    return [f for f in os.listdir(path) if not f.startswith('.')]
+
+
 def check_stats_files():
-    """
-    Check
-    :return:
-    """
-    if not os.path.exists(stats_dir):
+    if not os.path.exists(stats_dir) or len(listdir_nohidden(stats_dir)) == 0:
         print("Word statistics files not found!\nDownloading...", end=" ")
         url = "https://www.dropbox.com/s/a84otqrg6u1c5je/stats.zip?dl=1"
         urlretrieve(url, "stats.zip")

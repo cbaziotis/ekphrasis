@@ -10,7 +10,8 @@ REGEX_TOKEN = re.compile(r'\b[a-z]{2,}\b')
 
 class SpellCorrector:
     """
-    The SpellCorrector extends the functionality of the Peter Norvig's spell-corrector in http://norvig.com/spell-correct.html
+    The SpellCorrector extends the functionality of the Peter Norvig's
+    spell-corrector in http://norvig.com/spell-correct.html
     """
 
     def __init__(self, corpus="english"):
@@ -151,20 +152,3 @@ class SpellCorrector:
 
     def normalize_elongated(self, word):
         return self.case_of(word)(self.best_elong_candidate(word.lower()))
-
-# # print(len(edits('intereestaang')))
-# # print(len(list(edits2('intereestaang'))))
-# sp = SpellCorrector()
-# print(len(sp.WORDS))
-# print(sp.N)
-#
-# print(sp.correct_word("youu", fast=False))
-# print(sp.most_probable(["yoouu", "youu", "you", "whatever"]))
-# print(sp.correct_word("interestaang"))
-# print(sp.correct_word('whhyy'))
-# print(sp.correct_word("interestaaang"))
-
-# for i in range(20):
-#     program_starts = time.time()
-#     sp.correction('intereestaang')
-#     print("time:", time.time() - program_starts)
