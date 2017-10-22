@@ -1,5 +1,6 @@
 import re
 
+# todo:catch repeating parenthesis
 emoticons = {
     ':*': '<kiss>',
     ':-*': '<kiss>',

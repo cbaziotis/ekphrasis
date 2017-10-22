@@ -77,8 +77,9 @@ text_processor = TextPreProcessor(
 )
 
 sentences = [
-    "can't wait for the NEW SEASON of #TwinPeaks ＼(^o^)／ !!! #davidlynch #tvseries :))) ",
-    "I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies >3:/"
+    "CANT WAIT for the new season of #TwinPeaks ＼(^o^)／!!! #davidlynch #tvseries :)))",
+    "I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies :/",
+    "@SentimentSymp:  can't wait for the Nov 9 #Sentiment talks!  YAAAAAAY !!! :-D http://sentimentsymposium.com/."
 ]
 
 for s in sentences:
@@ -88,9 +89,11 @@ for s in sentences:
 Output:
 
 ```
-can not wait for the new <allcaps> season <allcaps> of <hashtag> twin peaks </hashtag> ＼(^o^)／ ! <repeated> <hashtag> david lynch </hashtag> <hashtag> tv series </hashtag> :)))
+cant <allcaps> wait <allcaps> for the new season of <hashtag> twin peaks </hashtag> ＼(^o^)／ ! <repeated> <hashtag> david lynch </hashtag> <hashtag> tv series </hashtag> :)))
 
-i saw the new <hashtag> john doe </hashtag> movie and it sucks <elongated> ! <repeated> waisted <allcaps> <money> . <repeated> <hashtag> bad movies </hashtag> > <number> <annoyed>
+i saw the new <hashtag> john doe </hashtag> movie and it sucks <elongated> ! <repeated> waisted <allcaps> <money> . <repeated> <hashtag> bad movies </hashtag> <annoyed>
+
+<user> : can not wait for the <date> <hashtag> sentiment </hashtag> talks ! yay <allcaps> <elongated> ! <repeated> <laugh> <url>
 ```
 
 
