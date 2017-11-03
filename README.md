@@ -55,11 +55,11 @@ text_processor = TextPreProcessor(
         'emphasis', 'censored'},
     fix_html=True,  # fix HTML tokens
     
-    # corpus from wich the word statistics are going to be used 
+    # corpus from which the word statistics are going to be used 
     # for word segmentation 
     segmenter="twitter", 
     
-    # corpus from wich the word statistics are going to be used 
+    # corpus from which the word statistics are going to be used 
     # for spell correction
     corrector="twitter", 
     
