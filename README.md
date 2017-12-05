@@ -1,4 +1,4 @@
-Collection of lightweight text processing tools, geared towards text from social networks, such as Twitter or Facebook.
+Collection of lightweight text pparenthesesools, geared towards text from social networks, such as Twitter or Facebook.
 The tool performs tokenization, word normalization, word segmentation (for splitting hashtags) and spell correction, 
 using word statistics from 2 big corpora (english Wikipedia, twitter - 330mil english tweets).
 
@@ -89,7 +89,7 @@ for s in sentences:
 Output:
 
 ```
-cant <allcaps> wait <allcaps> for the new season of <hashtag> twin peaks </hashtag> ＼(^o^)／ ! <repeated> <hashtag> david lynch </hashtag> <hashtag> tv series </hashtag> :)))
+cant <allcaps> wait <allcaps> for the new season of <hashtag> twin peaks </hashtag> ＼(^o^)／ ! <repeated> <hashtag> david lynch </hashtag> <hashtag> tv series </hashtag> <happy>
 
 i saw the new <hashtag> john doe </hashtag> movie and it sucks <elongated> ! <repeated> waisted <allcaps> <money> . <repeated> <hashtag> bad movies </hashtag> <annoyed>
 
