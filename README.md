@@ -5,6 +5,23 @@ using word statistics from 2 big corpora (english Wikipedia, twitter - 330mil en
 _ekphrasis_ was developed as part of the text processing pipeline for
 _DataStories_ team's submission for _SemEval-2017 Task 4 (English), Sentiment Analysis in Twitter_.
 
+If you use the library in you research project, please cite the paper 
+["DataStories at SemEval-2017 Task 4: Deep LSTM with Attention for Message-level and Topic-based Sentiment Analysis"](http://www.aclweb.org/anthology/S17-2126).
+
+Citation:
+```
+@InProceedings{baziotis-pelekis-doulkeridis:2017:SemEval2,
+  author    = {Baziotis, Christos  and  Pelekis, Nikos  and  Doulkeridis, Christos},
+  title     = {DataStories at SemEval-2017 Task 4: Deep LSTM with Attention for Message-level and Topic-based Sentiment Analysis},
+  booktitle = {Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017)},
+  month     = {August},
+  year      = {2017},
+  address   = {Vancouver, Canada},
+  publisher = {Association for Computational Linguistics},
+  pages     = {747--754}
+}
+```
+
 Note: 
 More examples will be coming soon...
 
