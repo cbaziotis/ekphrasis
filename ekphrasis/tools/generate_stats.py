@@ -13,13 +13,14 @@ import numpy
 from tqdm import tqdm
 
 REGEX_TOKEN = re.compile(r'(?<![#@])\b[a-z]{1,15}\b')
-REGEX_URL = re.compile(r"(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})")
+REGEX_URL = re.compile(
+    r"(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})")
 SEPARATOR = "_"
 
 
-##############################################################################################################
+###############################################################################
 # Parse Arguments
-##############################################################################################################
+###############################################################################
 
 def check_empty_arg(value):
     if len(str(value)) == 0:
@@ -38,13 +39,17 @@ parser = argparse.ArgumentParser()
 
 # add arguments ########################################
 parser.add_argument('--input', nargs='?', type=check_empty_arg, default="./",
-                    help='path to file or directory containing the files for calculating the statistics.')
-parser.add_argument('--name', nargs='?', type=check_empty_arg, default="mycorpus", help='')
-parser.add_argument('--ngrams', type=int, default=2, help='up-to how many ngrams to calculate statistics.')
+                    help='path to file or directory containing the files for '
+                         'calculating the statistics.')
+parser.add_argument('--name', nargs='?', type=check_empty_arg,
+                    default="mycorpus", help='')
+parser.add_argument('--ngrams', type=int, default=2,
+                    help='up-to how many ngrams to calculate statistics.')
 parser.add_argument('--mincount', nargs='+', type=int, default=[60, 25],
                     help='eliminate all ngrams below the given count.')
 parser.add_argument('--perc', nargs='+', type=int, default=0,
-                    help='eliminate all ngrams below the given percentile. 0=ALL')
+                    help='eliminate all ngrams below the given percentile. '
+                         '0=ALL')
 
 pickle_parser = parser.add_mutually_exclusive_group()
 pickle_parser.add_argument('--pickle', dest='pickle', action='store_true')
@@ -58,14 +63,8 @@ parser.set_defaults(web_fix=True)
 
 args = parser.parse_args()
 
-args.input = "C:\\Users\\theos\\Downloads\\text8\\"
-args.name = "text8"
 
-
-print(args)
-
-
-##############################################################################################################
+###############################################################################
 
 def tokenize(text):
     """
@@ -83,13 +82,13 @@ def get_ngrams(input_list, n):
     return zip(*[input_list[i:] for i in range(n)])
 
 
-def write_stats_to_file(filename, counts, mincount):
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-    with open(filename + ".txt", 'w', encoding="utf-8") as f:
+def write_stats_to_file(file, counts, mincount):
+    with open(file, 'w', encoding="utf-8") as f:
         if args.perc == 0:
             percentile = 0
         else:
-            percentile = numpy.percentile(numpy.fromiter(counts.values(), numpy.int32), args.perc)
+            percentile = numpy.percentile(
+                numpy.fromiter(counts.values(), numpy.int32), args.perc)
         threshold = max(percentile, mincount)
 
         for k, v in counts.items():
@@ -100,7 +99,7 @@ def write_stats_to_file(filename, counts, mincount):
                 f.write('\t'.join(entry) + '\n')
 
     if args.pickle:
-        with open(filename + ".pickle", 'wb') as f:
+        with open(file + ".pickle", 'wb') as f:
             pickle.dump(counts, f)
 
 
@@ -131,16 +130,35 @@ def count_file(filename, countkeeper, desc=""):
 
 def write_stats(counts):
     print()
+    dir_path = os.path.dirname(os.path.realpath(__file__))
     for k, v in counts.items():
         print("Writing " + str(k) + "-grams...")
         counter = Counter(counts[k])
-        print("entries:{}\t-\ttokens:{}".format(format(len(counter), ','), format(sum(counter.values()), ',')))
-        write_stats_to_file("../stats/" + args.name + "/counts_" + str(k) + "grams", counter, args.mincount[int(k) - 1])
+        print("entries:{}\t-\ttokens:{}".format(format(len(counter), ','),
+                                                format(sum(counter.values()),
+                                                       ',')))
+
+        name = "counts_{}grams.txt".format(str(k))
+        filename = os.path.join(dir_path, "..", "stats", args.name, name)
+
+        print("writing stats to file {}".format(filename))
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+        write_stats_to_file(filename, counter, args.mincount[int(k) - 1])
 
 
 def prune_low_freq(word_stats, threshold):
-    # remove ngrams with count less than mincount
-    # avoid dict comprehension as it creates a new temp dict and overloads the memory
+    """
+    remove ngrams with count less than mincount
+    avoid dict comprehension as it creates a new temp dict
+    and overloads the memory
+    Args:
+        word_stats ():
+        threshold ():
+
+    Returns:
+
+    """
     for ng in list(word_stats.keys()):
         for t in list(word_stats[ng].keys()):
             if not word_stats[ng][t] >= threshold:
@@ -182,8 +200,10 @@ if __name__ == '__main__':
 
             time.sleep(0.01)
 
-            if any(len(stats[ngram]) > pruning_size_threshold for ngram in list(stats.keys())):
-                print("Cleaning entries with only one occurrence, to save memory...")
+            if any(len(stats[ngram]) > pruning_size_threshold for ngram in
+                   list(stats.keys())):
+                print("Cleaning entries with only one occurrence, "
+                      "in order to save memory...")
                 prune_low_freq(stats, low_freq_threshold)
                 # write progress
                 # plot_statistics(stats)
