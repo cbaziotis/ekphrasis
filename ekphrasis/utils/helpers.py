@@ -73,3 +73,6 @@ def product(nums):
     Return the product of a sequence of numbers.
     """
     return reduce(operator.mul, nums, 1)
+
+
+check_stats_files()
