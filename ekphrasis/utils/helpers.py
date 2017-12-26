@@ -1,7 +1,7 @@
 import operator
 import os
-import pickle
 import sys
+import ujson as json
 import zipfile
 from functools import reduce
 from os import path
@@ -31,18 +31,18 @@ def read_stats(corpus, ngram):
     check_stats_files()
     print("Reading " + "{} - {}grams ...".format(corpus, ngram))
     text = path.join(*[stats_dir, corpus, "counts_{}grams.txt".format(ngram)])
-    pickled = path.join(
-        *[stats_dir, corpus, "counts_{}grams.pickle".format(ngram)])
+    dumped = path.join(
+        *[stats_dir, corpus, "counts_{}grams.json".format(ngram)])
 
-    if os.path.isfile(pickled):
-        with open(pickled, "rb") as f:
-            stats = pickle.load(f)
+    if os.path.isfile(dumped):
+        with open(dumped, "r") as f:
+            stats = json.load(f)
             return stats
     elif os.path.isfile(text):
-        print("generating binary file for faster loading...")
+        print("generating cache file for faster loading...")
         stats = parse_stats(text)
-        with open(pickled, "wb") as f:
-            pickle.dump(stats, f)
+        with open(dumped, "w") as f:
+            json.dump(stats, f)
         return stats
     else:
         print("stats file not available!")
@@ -73,6 +73,3 @@ def product(nums):
     Return the product of a sequence of numbers.
     """
     return reduce(operator.mul, nums, 1)
-
-
-check_stats_files()

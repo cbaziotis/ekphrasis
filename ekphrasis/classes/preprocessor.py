@@ -54,6 +54,13 @@ class TextPreProcessor:
             corrector (str): define the statistics of what corpus you would
                 like to use [english, twitter]
 
+            all_caps_tag (str): how to wrap the capitalized words
+                values [single, wrap, every]
+                Note: applicable only when `allcaps` is included in annotate[]
+                    - single: add a tag after the last capitalized word
+                    - wrap: wrap all words with opening and closing tags
+                    - every: add a tag after each word
+
             spell_correct_elong (bool): choose if you want to perform
                 spell correction after the normalization of elongated words.
                 * significantly affects performance (speed)
@@ -77,6 +84,7 @@ class TextPreProcessor:
         self.unpack_hashtags = kwargs.get("unpack_hashtags", False)
         self.segmenter_corpus = kwargs.get("segmenter", "english")
         self.corrector_corpus = kwargs.get("corrector", "english")
+        self.all_caps_tag = kwargs.get("all_caps_tag", "wrap")
         self.mode = kwargs.get("mode", "normal")
 
         if self.unpack_hashtags:
@@ -86,7 +94,8 @@ class TextPreProcessor:
 
         self.regexes = ExManager().get_compiled()
         if 'hashtag' in self.omit or 'hashtag' in self.backoff:
-            print("You can't omit/backoff and unpack hashtags!\n unpack_hashtags will be set to False")
+            print("You can't omit/backoff and unpack hashtags!\n "
+                  "unpack_hashtags will be set to False")
             self.unpack_hashtags = False
 
     def __copy__(self):
@@ -104,12 +113,13 @@ class TextPreProcessor:
             text = m.group()
 
         if mode == "single":
-            return " " + text + " " + "<" + tag + ">" + " "
+            return " {} <{}> ".format(text, tag)
         elif mode == "wrap":
-            return " ".join([" <" + tag + "> ", text, " </" + tag + "> "]) + " "
+            return " ".join([" <{}> {} </{}> ".format(tag, text, tag)]) + " "
         elif mode == "every":
             tokens = text.split()
-            processed = " ".join([" " + t + " " + "<" + tag + ">" + " " for t in tokens])
+            processed = " ".join([" {} <{}> ".format(t, tag)
+                                  for t in tokens])
             return " " + processed + " "
 
     @lru_cache(maxsize=131072)
@@ -125,7 +135,8 @@ class TextPreProcessor:
             expanded = " ".join(expanded.split("-"))
             expanded = " ".join(expanded.split("_"))
             # print(m.group(), " - ", expanded)
-            # with open("analysis/segmenter_" + self.segmenter_corpus + ".txt", "a") as f:
+            # with open("analysis/segmenter_" +
+            # self.segmenter_corpus + ".txt", "a") as f:
             #     f.write(m.group() + "\t" + expanded + "\n")
 
         else:
@@ -152,8 +163,10 @@ class TextPreProcessor:
 
         # try to spell correct the word
         if self.spell_correct_elong:
-            text = self.spell_corrector.correct_word(text, assume_wrong=True, fast=True)
-            # with open("analysis/spell_corrector_" + self.corrector_corpus + ".txt", "a") as f:
+            text = self.spell_corrector.correct_word(text, assume_wrong=True,
+                                                     fast=True)
+            # with open("analysis/spell_corrector_" +
+            # self.corrector_corpus + ".txt", "a") as f:
             #     f.write(m.group() + " - " + text + "\n")
 
             # print(m.group(), "-", text)
@@ -165,7 +178,8 @@ class TextPreProcessor:
     @lru_cache(maxsize=4096)
     def handle_repeated_puncts(self, m):
         """
-        return the sorted set so mathes random combinations of puncts will be mapped to the same token
+        return the sorted set so mathes random combinations of puncts
+        will be mapped to the same token
         "!??!?!!", "?!!!!?!", "!!?", "!?!?" --> "?!"
         "!...", "...?!" --> ".!"
         :param m:
@@ -180,15 +194,20 @@ class TextPreProcessor:
         return text
 
     @lru_cache(maxsize=4096)
-    def handle_generic_match(self, m, tag):
+    def handle_generic_match(self, m, tag, mode="every"):
         """
-        :param tag:
-        :param m:
-        :return:
+
+        Args:
+            m ():
+            tag ():
+            mode ():
+
+        Returns:
+
         """
         text = m.group()
         if tag in self.include_tags:
-            text = self.add_special_tag(text, tag, mode="every")
+            text = self.add_special_tag(text, tag, mode=mode)
 
         return text
 
@@ -232,8 +251,10 @@ class TextPreProcessor:
         # BACKOFF & OMIT
         ###########################
         for item in self.backoff:
-            # better add an extra space after the match. Just to be safe. extra spaces will be normalized later anyway
-            doc = self.regexes[item].sub(lambda m: " " + "<" + item + ">" + " ", doc)
+            # better add an extra space after the match.
+            # Just to be safe. extra spaces will be normalized later anyway
+            doc = self.regexes[item].sub(lambda m: " " + "<" + item + ">" + " ",
+                                         doc)
         for item in self.omit:
             doc = doc.replace("<" + item + ">", '')
 
@@ -241,17 +262,25 @@ class TextPreProcessor:
         # unpack hashtags
         ###########################
         if self.unpack_hashtags:
-            doc = self.regexes["hashtag"].sub(lambda w: self.handle_hashtag_match(w), doc)
+            doc = self.regexes["hashtag"].sub(
+                lambda w: self.handle_hashtag_match(w), doc)
 
         ###########################
         # handle special cases
         ###########################
         if self.mode != "fast":
-            doc = self.regexes["elongated"].sub(lambda w: self.handle_elongated_match(w), doc)
-            doc = self.regexes["repeat_puncts"].sub(lambda w: self.handle_repeated_puncts(w), doc)
-            doc = self.regexes["emphasis"].sub(lambda w: self.handle_emphasis_match(w), doc)
-            doc = self.regexes["allcaps"].sub(lambda w: self.handle_generic_match(w, "allcaps"), doc)
-            doc = self.regexes["censored"].sub(lambda w: self.handle_generic_match(w, "censored"), doc)
+            doc = self.regexes["allcaps"].sub(
+                lambda w: self.handle_generic_match(w, "allcaps",
+                                                    mode=self.all_caps_tag),
+                doc)
+            doc = self.regexes["elongated"].sub(
+                lambda w: self.handle_elongated_match(w), doc)
+            doc = self.regexes["repeat_puncts"].sub(
+                lambda w: self.handle_repeated_puncts(w), doc)
+            doc = self.regexes["emphasis"].sub(
+                lambda w: self.handle_emphasis_match(w), doc)
+            doc = self.regexes["censored"].sub(
+                lambda w: self.handle_generic_match(w, "censored"), doc)
 
         ###########################
         # unpack contractions: i'm -> i am, can't -> can not...
