@@ -6,6 +6,7 @@ import numpy
 from nltk.corpus import sentiwordnet as swn
 from termcolor import cprint
 
+wordnet_lemmatizer = nltk.WordNetLemmatizer()
 # additional negations: nowhere
 
 negation_words = {"'t", "ain't", 'aint', "aren't", 'arent', 'cant',
@@ -184,7 +185,6 @@ def polarity(doc, neg_comma=True, neg_modals=True):
         - [positive, negative, neutral] scores
 
     """
-    wordnet_lemmatizer = nltk.WordNetLemmatizer()
 
     tagged = nltk.pos_tag([wordnet_lemmatizer.lemmatize(w)
                            for w in doc])
