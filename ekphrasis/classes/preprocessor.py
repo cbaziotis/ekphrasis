@@ -1,3 +1,4 @@
+import re
 from functools import lru_cache
 
 import ftfy
@@ -206,8 +207,7 @@ class TextPreProcessor:
 
         """
         text = m.group()
-        if tag in self.include_tags:
-            text = self.add_special_tag(text, tag, mode=mode)
+        text = self.add_special_tag(text, tag, mode=mode)
 
         return text
 
@@ -229,6 +229,8 @@ class TextPreProcessor:
 
     @lru_cache(maxsize=131072)
     def pre_process_doc(self, doc):
+
+        doc = re.sub(r' +', ' ', doc)  # remove repeating spaces
 
         # ###########################
         # # fix bad unicode
@@ -269,18 +271,27 @@ class TextPreProcessor:
         # handle special cases
         ###########################
         if self.mode != "fast":
-            doc = self.regexes["allcaps"].sub(
-                lambda w: self.handle_generic_match(w, "allcaps",
-                                                    mode=self.all_caps_tag),
-                doc)
-            doc = self.regexes["elongated"].sub(
-                lambda w: self.handle_elongated_match(w), doc)
-            doc = self.regexes["repeat_puncts"].sub(
-                lambda w: self.handle_repeated_puncts(w), doc)
-            doc = self.regexes["emphasis"].sub(
-                lambda w: self.handle_emphasis_match(w), doc)
-            doc = self.regexes["censored"].sub(
-                lambda w: self.handle_generic_match(w, "censored"), doc)
+            if "allcaps" in self.include_tags:
+                doc = self.regexes["allcaps"].sub(
+                    lambda w: self.handle_generic_match(w, "allcaps",
+                                                        mode=self.all_caps_tag),
+                    doc)
+
+            if "elongated" in self.include_tags:
+                doc = self.regexes["elongated"].sub(
+                    lambda w: self.handle_elongated_match(w), doc)
+
+            if "repeated" in self.include_tags:
+                doc = self.regexes["repeat_puncts"].sub(
+                    lambda w: self.handle_repeated_puncts(w), doc)
+
+            if "emphasis" in self.include_tags:
+                doc = self.regexes["emphasis"].sub(
+                    lambda w: self.handle_emphasis_match(w), doc)
+
+            if "censored" in self.include_tags:
+                doc = self.regexes["censored"].sub(
+                    lambda w: self.handle_generic_match(w, "censored"), doc)
 
         ###########################
         # unpack contractions: i'm -> i am, can't -> can not...
@@ -289,6 +300,11 @@ class TextPreProcessor:
         # remove textacy dependency
         if self.unpack_contractions:
             doc = unpack_contractions(doc)
+
+        # omit allcaps if inside hashtags
+        doc = re.sub(r' +', ' ', doc)  # remove repeating spaces
+        doc = doc.replace('<hashtag> <allcaps>', '<hashtag>')
+        doc = doc.replace('</allcaps> </hashtag>', '</hashtag>')
 
         ###########################
         # Tokenize
@@ -305,8 +321,7 @@ class TextPreProcessor:
 
         return doc
 
-    def pre_process_docs(self, docs):
+    def pre_process_docs(self, docs, lazy=True):
         from tqdm import tqdm
-        # for d in docs:
         for d in tqdm(docs, desc="PreProcessing..."):
             yield self.pre_process_doc(d)

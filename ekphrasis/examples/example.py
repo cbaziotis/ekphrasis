@@ -9,8 +9,9 @@ def ws_tokenizer(text):
 
 text_processor = TextPreProcessor(
     normalize=['url', 'email', 'percent', 'money', 'phone', 'user', 'time',
-               'url', 'date', 'number'],
-    annotate={"hashtag", "elongated", "allcaps", "repeated", 'emphasis', 'censored'},
+               'date', 'number'],
+    annotate={"hashtag", "elongated", "allcaps", "repeated", 'emphasis',
+              'censored'},
     all_caps_tag="wrap",
     fix_text=True,
     segmenter="twitter_2018",
@@ -28,6 +29,7 @@ sentences = [
     "I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies :/",
     "I saw the new #JOHNDOE movie AND IT SUCKS!!! WAISTED $10... #badmovies :/",
     "@SentimentSymp:  can't wait for the Nov 9 #Sentiment talks!  YAAAAAAY !!! :-D http://sentimentsymposium.com/.",
+    "Thanks x https://t.co/ZXTcDLyDS9",
 ]
 
 for s in sentences:

@@ -1,15 +1,22 @@
 import itertools
 import re
 
+import nltk
+import numpy
+from nltk.corpus import sentiwordnet as swn
 from termcolor import cprint
 
 # additional negations: nowhere
+
 negation_words = {"'t", "ain't", 'aint', "aren't", 'arent', 'cant',
                   "didn't", 'didnt', "doesn't", 'doesnt', "don't", 'dont',
-                  "hadn't", 'hadnt', "hasn't", 'hasnt', "haven't", 'havent', "isn't", 'isnt',
+                  "hadn't", 'hadnt', "hasn't", 'hasnt', "haven't", 'havent',
+                  "isn't", 'isnt',
                   'never', 'no', 'none', 'noone', 'not', 'nothing', 'wont', }
-negation_modals = {"couldn't", 'couldnt', "shouldn't", 'shouldnt', "wouldn't", 'wouldnt'}
-contrast_words = {"but", "although", "though", "however", "despite", "whereas", "while", "unlike", "still"}
+negation_modals = {"couldn't", 'couldnt', "shouldn't", 'shouldnt', "wouldn't",
+                   'wouldnt'}
+contrast_words = {"but", "although", "though", "however", "despite", "whereas",
+                  "while", "unlike", "still"}
 neg_puncts = {"\n", ".", "?", ":", "..."}
 
 
@@ -33,10 +40,17 @@ def unpack_contractions(text):
 
     """
     # standard
-    text = re.sub(r"(\b)([Aa]re|[Cc]ould|[Dd]id|[Dd]oes|[Dd]o|[Hh]ad|[Hh]as|[Hh]ave|[Ii]s|[Mm]ight|[Mm]ust|[Ss]hould|[Ww]ere|[Ww]ould)n't", r"\1\2 not", text)
-    text = re.sub(r"(\b)([Hh]e|[Ii]|[Ss]he|[Tt]hey|[Ww]e|[Ww]hat|[Ww]ho|[Yy]ou)'ll", r"\1\2 will", text)
-    text = re.sub(r"(\b)([Tt]hey|[Ww]e|[Ww]hat|[Ww]ho|[Yy]ou)'re", r"\1\2 are", text)
-    text = re.sub(r"(\b)([Ii]|[Ss]hould|[Tt]hey|[Ww]e|[Ww]hat|[Ww]ho|[Ww]ould|[Yy]ou)'ve", r"\1\2 have", text)
+    text = re.sub(
+        r"(\b)([Aa]re|[Cc]ould|[Dd]id|[Dd]oes|[Dd]o|[Hh]ad|[Hh]as|[Hh]ave|[Ii]s|[Mm]ight|[Mm]ust|[Ss]hould|[Ww]ere|[Ww]ould)n't",
+        r"\1\2 not", text)
+    text = re.sub(
+        r"(\b)([Hh]e|[Ii]|[Ss]he|[Tt]hey|[Ww]e|[Ww]hat|[Ww]ho|[Yy]ou)'ll",
+        r"\1\2 will", text)
+    text = re.sub(r"(\b)([Tt]hey|[Ww]e|[Ww]hat|[Ww]ho|[Yy]ou)'re", r"\1\2 are",
+                  text)
+    text = re.sub(
+        r"(\b)([Ii]|[Ss]hould|[Tt]hey|[Ww]e|[Ww]hat|[Ww]ho|[Ww]ould|[Yy]ou)'ve",
+        r"\1\2 have", text)
     # non-standard
     text = re.sub(r"(\b)([Cc]a)n't", r"\1\2n not", text)
     text = re.sub(r"(\b)([Ii])'m", r"\1\2 am", text)
@@ -48,8 +62,9 @@ def unpack_contractions(text):
 
 
 def doc_ngrams(doc, n_from=1, n_to=2):
-    return list(itertools.chain.from_iterable([[doc[i:i + n] for i in range(len(doc) - (n - 1))]
-                                               for n in range(n_from, n_to + 1)]))
+    return list(itertools.chain.from_iterable(
+        [[doc[i:i + n] for i in range(len(doc) - (n - 1))]
+         for n in range(n_from, n_to + 1)]))
 
 
 def find_negations(doc, neg_comma=True, neg_modals=True, debug=False):
@@ -102,7 +117,8 @@ def find_negations(doc, neg_comma=True, neg_modals=True, debug=False):
             continue
 
         if tok == ")":
-            status["parentheses"] = False  # in order to be false the next time it goes in to a parentheses
+            status[
+                "parentheses"] = False  # in order to be false the next time it goes in to a parentheses
             current = "normal"
             if debug:
                 cprint(tok, 'green', attrs=['bold'], end=' ')
@@ -153,3 +169,49 @@ def mark_doc(doc, wids, mark=None, pos=None):
             marked_doc.append(tok)
 
     return marked_doc
+
+
+def polarity(doc, neg_comma=True, neg_modals=True):
+    """
+    Estimate the sentiment polarity of a tokenized document.
+    Args:
+        doc (): a list of words (strings)
+        neg_comma (): if True, the negation context ends on a comma
+        neg_modals (): if True, include negation modals in the set of negation words
+
+    Returns:
+        - polarity
+        - [positive, negative, neutral] scores
+
+    """
+    wordnet_lemmatizer = nltk.WordNetLemmatizer()
+
+    tagged = nltk.pos_tag([wordnet_lemmatizer.lemmatize(w)
+                           for w in doc])
+    negations = find_negations(doc, neg_comma=neg_comma, neg_modals=neg_modals)
+    scores = []
+    for i, (word, tag) in enumerate(tagged):
+        try:
+            ss_set = None
+            if 'NN' in tag and swn.senti_synsets(word):
+                ss_set = list(swn.senti_synsets(word))[0]
+            elif 'VB' in tag and swn.senti_synsets(word):
+                ss_set = list(swn.senti_synsets(word))[0]
+            elif 'JJ' in tag and swn.senti_synsets(word):
+                ss_set = list(swn.senti_synsets(word))[0]
+            elif 'RB' in tag and swn.senti_synsets(word):
+                ss_set = list(swn.senti_synsets(word))[0]
+            if ss_set:
+                pos = ss_set.pos_score()
+                neg = ss_set.neg_score()
+                obj = ss_set.obj_score()
+                if i in negations:
+                    pos, neg = neg, pos
+                scores.append([pos, neg, obj])
+        except:
+            pass
+
+    _scores = numpy.mean(numpy.array(scores), axis=0)
+    _polarity = _scores[0] - _scores[1]
+
+    return _polarity, _scores
