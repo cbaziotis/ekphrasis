@@ -9,7 +9,7 @@ from ekphrasis.classes.exmanager import ExManager
 
 class Tokenizer:
     social_pipeline = [
-        "EMOJI_UCS4", "URL", "TAG", "EMAIL", "USER", "HASHTAG",
+        "EMOJI", "URL", "TAG", "EMAIL", "USER", "HASHTAG",
         "CASHTAG", "PHONE", "PERCENT", "MONEY", "DATE", "TIME",
         "ACRONYM", "LTR_FACE", "RTL_FACE", "CENSORED", "EMPHASIS",
         "REST_EMOTICONS", "NUMBER", "WORD", "EASTERN_EMOTICONS",
@@ -54,15 +54,8 @@ class Tokenizer:
 
     def build(self, pipeline):
         for term in pipeline:
-            if term.lower().startswith("emoji"):
-                try:
-                    re.compile(self.regexes["EMOJI_UCS4"])
-                    self.add_to_pipeline("EMOJI_UCS4")
-                except re.error:
-                    re.compile(self.regexes["EMOJI_UCS2"])
-                    self.add_to_pipeline("EMOJI_UCS2")
-            else:
-                self.add_to_pipeline(term)
+            self.add_to_pipeline(term)
+
 
     @staticmethod
     def wrap_non_matching(exp):
@@ -157,12 +150,7 @@ class SocialTokenizer:
         numbers = kwargs.get("numbers", True)
 
         if emojis:
-            try:
-                re.compile(self.regexes["EMOJI_UCS4"])
-                pipeline.append(self.regexes["EMOJI_UCS4"])
-            except re.error:
-                re.compile(self.regexes["EMOJI_UCS2"])
-                pipeline.append(self.regexes["EMOJI_UCS2"])
+            pipeline.append(self.regexes["EMOJI"])
 
         if urls:
             pipeline.append(self.regexes["URL"])
