@@ -149,9 +149,6 @@ class SocialTokenizer:
         emphasis = kwargs.get("emphasis", True)
         numbers = kwargs.get("numbers", True)
 
-        if emojis:
-            pipeline.append(self.regexes["EMOJI"])
-
         if urls:
             pipeline.append(self.regexes["URL"])
 
@@ -208,6 +205,9 @@ class SocialTokenizer:
 
         if numbers:
             pipeline.append(self.regexes["NUMBER"])
+
+        if emojis:
+            pipeline.append(self.regexes["EMOJI"])
 
         # any other word
         pipeline.append(self.regexes["WORD"])
