@@ -94,7 +94,7 @@ class SpellCorrector:
     #     candidates = [w for w in self.WORDS if w]
     #     return self.known([word]) or self.known(self.edit_step(word)) or self.known(self.edits2(word)) or [word]
 
-    @lru_cache(maxsize=10000)
+    @lru_cache(maxsize=4096)
     def correct(self, word, assume_wrong=False, fast=False):
         """
         Most probable spelling correction for word.

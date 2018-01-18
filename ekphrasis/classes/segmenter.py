@@ -114,7 +114,7 @@ class Segmenter:
                 for i in range(min(len(text), self.L))]
 
     # if you don't have enough RAM lower the maxsize
-    @lru_cache(maxsize=20000)
+    @lru_cache(maxsize=8096)
     def find_segment(self, text, prev='<S>'):
         """
         Return (log P(words), words), where words is the best estimated segmentation
@@ -129,7 +129,7 @@ class Segmenter:
         return max(candidates)
 
     # if you don't have enough RAM lower the maxsize
-    @lru_cache(maxsize=20000)
+    # @lru_cache(maxsize=20000)
     def segment(self, word):
         if word.islower():
             return " ".join(self.find_segment(word)[1])
