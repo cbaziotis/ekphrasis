@@ -30,6 +30,8 @@ sentences = [
     "I saw the new #JOHNDOE movie AND IT SUCKS!!! WAISTED $10... #badmovies :/",
     "@SentimentSymp:  can't wait for the Nov 9 #Sentiment talks!  YAAAAAAY !!! :-D http://sentimentsymposium.com/.",
     "Thanks x https://t.co/ZXTcDLyDS9",
+    "@Calum5SOS You lil poop please follow @EmilyBain224 ☺️💕",
+    "Words attendees would use to describe @prosper4africa's #ALN2015! https://t.co/hmNm8AdwOh",
 ]
 
 for s in sentences:

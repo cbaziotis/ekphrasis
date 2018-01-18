@@ -17,14 +17,16 @@ mytokenizer = Tokenizer(lowercase=False).tokenize
 
 sents = [
     "CANT WAIT for the new season of #TwinPeaks ＼(^o^)／ yaaaay!!! #davidlynch #tvseries :)))",
+    "@Calum5SOS You lil *poop* please follow @EmilyBain224 ☺️💕",
     "I saw the new #johndoe movie and it suuuuucks!!! WAISTED $10... #badmovies 3:/",
     "@SentimentSymp:  can't wait for the Nov 9 #Sentiment talks!  YAAAAAAY !!! >:-D http://sentimentsymposium.com/.",
+    "Words attendees would use to describe @prosper4africa's #ALN 2015! https://t.co/hmNm8AdwOh",
 ]
 
 for s in sents:
     print()
-    print("ORG: ", s)  # original sentence
+    # print("ORG: ", s)  # original sentence
     # print("WSP : ", wsp_tokenizer(s))  # whitespace tokenizer
     # print("WPU : ", puncttok(s))  # WordPunct tokenizer
     print("SC : ", social_tokenizer(s))  # social tokenizer
-    print("SC : ", mytokenizer(s))  # social tokenizer
+    # print("SC : ", mytokenizer(s))  # social tokenizer

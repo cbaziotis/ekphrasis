@@ -227,6 +227,23 @@ class TextPreProcessor:
     def dict_replace(wordlist, _dict):
         return [_dict[w] if w in _dict else w for w in wordlist]
 
+    @staticmethod
+    def remove_hashtag_allcaps(wordlist):
+        in_hashtag = False
+        _words = []
+        for word in wordlist:
+
+            if word == "<hashtag>":
+                in_hashtag = True
+            elif word == "</hashtag>":
+                in_hashtag = False
+            elif word in {"<allcaps>", "</allcaps>"} and in_hashtag:
+                continue
+
+            _words.append(word)
+
+        return _words
+
     @lru_cache(maxsize=20000)
     def pre_process_doc(self, doc):
 
@@ -303,13 +320,15 @@ class TextPreProcessor:
 
         # omit allcaps if inside hashtags
         doc = re.sub(r' +', ' ', doc)  # remove repeating spaces
-        doc = doc.replace('<hashtag> <allcaps>', '<hashtag>')
-        doc = doc.replace('</allcaps> </hashtag>', '</hashtag>')
+        # doc = re.sub(r'<hashtag><allcaps>', '<hashtag>', doc)  # remove repeating spaces
+        # doc = doc.replace('<hashtag> <allcaps>', '<hashtag>')
+        # doc = doc.replace('</allcaps> </hashtag>', '</hashtag>')
 
         ###########################
         # Tokenize
         ###########################
-        doc = " ".join(doc.split())  # normalize whitespace
+        doc = self.remove_hashtag_allcaps(doc.split())
+        doc = " ".join(doc)  # normalize whitespace
         if self.tokenizer:
             doc = self.tokenizer(doc)
 
