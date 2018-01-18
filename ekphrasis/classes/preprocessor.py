@@ -123,7 +123,7 @@ class TextPreProcessor:
                                   for t in tokens])
             return " " + processed + " "
 
-    @lru_cache(maxsize=131072)
+    @lru_cache(maxsize=20000)
     def handle_hashtag_match(self, m):
         """
         Break a string to its constituent words (using Viterbi algorithm)
@@ -227,7 +227,7 @@ class TextPreProcessor:
     def dict_replace(wordlist, _dict):
         return [_dict[w] if w in _dict else w for w in wordlist]
 
-    @lru_cache(maxsize=131072)
+    @lru_cache(maxsize=20000)
     def pre_process_doc(self, doc):
 
         doc = re.sub(r' +', ' ', doc)  # remove repeating spaces
