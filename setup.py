@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='ekphrasis',
-      version='0.4.9',
+      version='0.5',
       description='Text processing tool, geared towards text from '
                   'social networks, such as Twitter or Facebook. '
                   'Ekphrasis performs tokenization, word normalization, '
@@ -12,5 +12,15 @@ setup(name='ekphrasis',
       author_email='christos.baziotis@gmail.com',
       license='MIT',
       packages=find_packages(exclude=['docs', 'tests*', 'analysis']),
+      install_requires=[
+          'termcolor',
+          'tqdm',
+          'colorama',
+          'ujson',
+          'matplotlib',
+          'nltk',
+          'ftfy',
+          'numpy'
+      ],
       include_package_data=True
       )

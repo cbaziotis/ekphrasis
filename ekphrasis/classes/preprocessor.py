@@ -123,7 +123,7 @@ class TextPreProcessor:
                                   for t in tokens])
             return " " + processed + " "
 
-    @lru_cache(maxsize=4096)
+    @lru_cache(maxsize=65536)
     def handle_hashtag_match(self, m):
         """
         Break a string to its constituent words (using Viterbi algorithm)
@@ -176,7 +176,7 @@ class TextPreProcessor:
 
         return text
 
-    @lru_cache(maxsize=4096)
+    @lru_cache(maxsize=65536)
     def handle_repeated_puncts(self, m):
         """
         return the sorted set so mathes random combinations of puncts
@@ -194,7 +194,7 @@ class TextPreProcessor:
 
         return text
 
-    @lru_cache(maxsize=4096)
+    @lru_cache(maxsize=65536)
     def handle_generic_match(self, m, tag, mode="every"):
         """
 
@@ -211,7 +211,7 @@ class TextPreProcessor:
 
         return text
 
-    @lru_cache(maxsize=4096)
+    @lru_cache(maxsize=65536)
     def handle_emphasis_match(self, m):
         """
         :param m:
