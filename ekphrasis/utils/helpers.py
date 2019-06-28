@@ -96,4 +96,11 @@ def product(nums):
     """
     return reduce(operator.mul, nums, 1)
 
+def remove_tags(doc):
+    """
+    Remove tags from sentence
+    """
+    doc = ' '.join(word for word in doc.split() if word[0]!='<')
+    return doc
+
 # check_stats_files()
