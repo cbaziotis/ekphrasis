@@ -131,6 +131,8 @@ class Segmenter:
     # if you don't have enough RAM lower the maxsize
     @lru_cache(maxsize=65536)
     def segment(self, word):
+        if word.isupper():
+            word = word.lower()
         if word.islower():
             return " ".join(self.find_segment(word)[1])
         else:
