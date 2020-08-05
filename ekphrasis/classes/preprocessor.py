@@ -7,7 +7,7 @@ from ekphrasis.classes.exmanager import ExManager
 from ekphrasis.classes.segmenter import Segmenter
 from ekphrasis.classes.spellcorrect import SpellCorrector
 from ekphrasis.utils.nlp import unpack_contractions
-from ekphrasis.utils.helpers import remove_tags
+
 
 # noinspection PyPackageRequirements
 class TextPreProcessor:
@@ -72,8 +72,6 @@ class TextPreProcessor:
 
             fix_text (bool): choose if you want to fix bad unicode terms and
                 html entities.
-            
-            remove_tags (bool): Choose to remove tags after processing
         """
         self.omit = kwargs.get("omit", {})
         self.backoff = kwargs.get("normalize", {})
@@ -89,7 +87,6 @@ class TextPreProcessor:
         self.corrector_corpus = kwargs.get("corrector", "english")
         self.all_caps_tag = kwargs.get("all_caps_tag", "wrap")
         self.mode = kwargs.get("mode", "normal")
-        self.remove_tags = kwargs.get("remove_tags", False)
 
         if self.unpack_hashtags:
             self.segmenter = Segmenter(corpus=self.segmenter_corpus)
@@ -134,8 +131,8 @@ class TextPreProcessor:
         text = m.group()[1:]
 
         # todo:simplify routine
+        expanded = self.segmenter.segment(text)
         if text.islower():
-            expanded = self.segmenter.segment(text)
             expanded = " ".join(expanded.split("-"))
             expanded = " ".join(expanded.split("_"))
             # print(m.group(), " - ", expanded)
@@ -145,7 +142,6 @@ class TextPreProcessor:
 
         else:
             # split words following CamelCase convention
-            expanded = self.regexes["camel_split"].sub(r' \1', text)
             expanded = expanded.replace("-", "")
             expanded = expanded.replace("_", "")
             # print(m.group(), " - ", expanded)
@@ -157,8 +153,10 @@ class TextPreProcessor:
 
     def handle_elongated_match(self, m):
         text = m.group()
+
         # normalize to at most 2 repeating chars
         text = self.regexes["normalize_elong"].sub(r'\1\1', text)
+
         normalized = self.spell_corrector.normalize_elongated(text)
         if normalized:
             text = normalized
@@ -176,7 +174,6 @@ class TextPreProcessor:
             text = self.add_special_tag(text, "elongated")
 
         return text
-    
 
     @lru_cache(maxsize=65536)
     def handle_repeated_puncts(self, m):
@@ -310,7 +307,7 @@ class TextPreProcessor:
             if "censored" in self.include_tags:
                 doc = self.regexes["censored"].sub(
                     lambda w: self.handle_generic_match(w, "censored"), doc)
-        
+
         ###########################
         # unpack contractions: i'm -> i am, can't -> can not...
         ###########################
@@ -319,9 +316,6 @@ class TextPreProcessor:
         if self.unpack_contractions:
             doc = unpack_contractions(doc)
 
-        if self.remove_tags:
-            doc = remove_tags(doc)
-     
         # omit allcaps if inside hashtags
         doc = re.sub(r' +', ' ', doc)  # remove repeating spaces
         # doc = re.sub(r'<hashtag><allcaps>', '<hashtag>', doc)  # remove repeating spaces
