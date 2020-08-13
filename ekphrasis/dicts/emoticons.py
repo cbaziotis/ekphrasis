@@ -1,5 +1,5 @@
-import re
-
+import re,os
+from ekphrasis.utils import helpers
 # todo:catch repeating parenthesis
 emoticons = {
     ':*': '<kiss>',
@@ -197,10 +197,15 @@ for exp, tag in emoticons.items():
         mirror_emoticons[mirror] = tag
 emoticons.update(mirror_emoticons)
 
+
+
 for exp, tag in list(emoticons.items()):
     if exp.lower() not in emoticons:
         emoticons[exp.lower()] = tag
 
+uni_emoticons = helpers.read_emoji()      
+emoticons = {**emoticons, **uni_emoticons}
+        
 emoticon_groups = {
     "positive": {'<highfive>', '<laugh>', '<heart>', '<happy>'},
     "negative": {'<annoyed>', '<sad>', }
