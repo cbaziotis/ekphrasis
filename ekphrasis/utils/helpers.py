@@ -8,6 +8,7 @@ import ujson as json
 from urllib.request import urlretrieve
 import zipfile
 from ekphrasis.dicts import emojidict
+from ekphrasis.dicts.noslang import slangdict
 import pickle
 
 def get_stats_dir():
@@ -84,6 +85,24 @@ def read_emoji():
         z = pickle.load(open(os.path.join(ekphrasis_dir,'uni_emoticon.pickle'), 'rb'))
         return z
     
+
+def gen_slang_dict():
+    home = expanduser("~")
+
+    ekphrasis_dir = path.join(home, '.ekphrasis')
+
+    if not os.path.exists(ekphrasis_dir):
+        os.makedirs(ekphrasis_dir)
+    if not os.path.isfile(os.path.join(ekphrasis_dir,'slangdict.pickle')):
+        print('Slang File not found..\nGenerating')
+        z = slangdict.get_slang()
+        print('done!')        
+        pickle.dump(z, open(os.path.join(ekphrasis_dir,'slangdict.pickle'), "wb"))
+        return z
+    else:
+        print('Reading Slangs ...')
+        z = pickle.load(open(os.path.join(ekphrasis_dir,'slangdict.pickle'), 'rb'))
+        return z
 
 def listdir_nohidden(path):
     return [f for f in os.listdir(path) if not f.startswith('.')]
