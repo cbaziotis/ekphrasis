@@ -1,9 +1,13 @@
 
-import requests
+# import requests
+import urllib3
 
 def get_emoji():
 	url="https://www.unicode.org/Public/13.0.0/ucd/emoji/emoji-data.txt"
-	unicode_file_string = requests.get(url).text
+	# unicode_file_string = requests.get(url).text
+	http = urllib3.PoolManager()
+	response = http.request('GET', url)
+	unicode_file_string = response.data.decode('utf-8')
 	unicode_em_1 = {}
 	# s = s.split('\n')
 	for line in unicode_file_string.split('\n'):
