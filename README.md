@@ -1,4 +1,4 @@
-Collection of lightweight text pparenthesesools, geared towards text from social networks, such as Twitter or Facebook.
+Collection of lightweight text tools, geared towards text from social networks, such as Twitter or Facebook.
 The tool performs tokenization, word normalization, word segmentation (for splitting hashtags) and spell correction, 
 using word statistics from 2 big corpora (english Wikipedia, twitter - 330mil english tweets).
 
