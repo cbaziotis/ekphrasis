@@ -7,6 +7,6 @@ rm -rf dist
 python setup.py sdist bdist_wheel
 pip wheel -r requirements.txt
 
-twine register dist/*.tar.gz
+# twine register dist/*.tar.gz
 twine upload dist/*
-python setup.py sdist upload -r pypi
+# python setup.py sdist upload -r pypi

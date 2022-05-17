@@ -24,10 +24,15 @@ Citation:
 **Disclaimer:** The library is no longer actively developed. I will try to resolve important issues, but I can't make any promises.
 
 # Installation
-```
-pip install ekphrasis
-```
 
+build from source 
+```
+pip install git+git://github.com/cbaziotis/ekphrasis.git
+```
+or install from pypi
+```
+pip install ekphrasis -U
+```
 
 # Overview
 
