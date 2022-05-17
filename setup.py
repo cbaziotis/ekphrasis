@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='ekphrasis',
-      version='0.5.1',
+      version='0.5.2',
       description='Text processing tool, geared towards text from '
                   'social networks, such as Twitter or Facebook. '
                   'Ekphrasis performs tokenization, word normalization, '
