@@ -21,8 +21,7 @@ Citation:
 }
 ```
 
-Note: 
-More examples will be coming soon...
+**Disclaimer:** The library is no longer actively developed. I will try to resolve important issues, but I can't make any promises.
 
 # Installation
 ```
