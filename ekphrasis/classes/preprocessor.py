@@ -134,8 +134,8 @@ class TextPreProcessor:
         text = m.group()[1:]
 
         # todo:simplify routine
+        expanded = self.segmenter.segment(text)
         if text.islower():
-            expanded = self.segmenter.segment(text)
             expanded = " ".join(expanded.split("-"))
             expanded = " ".join(expanded.split("_"))
             # print(m.group(), " - ", expanded)
@@ -145,7 +145,6 @@ class TextPreProcessor:
 
         else:
             # split words following CamelCase convention
-            expanded = self.regexes["camel_split"].sub(r' \1', text)
             expanded = expanded.replace("-", "")
             expanded = expanded.replace("_", "")
             # print(m.group(), " - ", expanded)
