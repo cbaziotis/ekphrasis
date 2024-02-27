@@ -11,13 +11,15 @@ Citation:
 ```
 @InProceedings{baziotis-pelekis-doulkeridis:2017:SemEval2,
   author    = {Baziotis, Christos  and  Pelekis, Nikos  and  Doulkeridis, Christos},
-  title     = {DataStories at SemEval-2017 Task 4: Deep LSTM with Attention for Message-level and Topic-based Sentiment Analysis},
-  booktitle = {Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017)},
+  title     = {{D}ata{S}tories at {S}em{E}val-2017 Task 4: Deep {LSTM} with Attention for Message-level and Topic-based Sentiment Analysis},
+  booktitle = {Proceedings of the 11th International Workshop on Semantic Evaluation ({S}em{E}val-2017)},
   month     = {August},
   year      = {2017},
   address   = {Vancouver, Canada},
   publisher = {Association for Computational Linguistics},
-  pages     = {747--754}
+  pages     = {747--754},
+  url       = {https://aclanthology.org/S17-2126},
+  doi       = {10.18653/v1/S17-2126},
 }
 ```
 
