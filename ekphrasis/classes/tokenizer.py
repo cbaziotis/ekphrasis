@@ -45,7 +45,7 @@ class Tokenizer:
 
         self.build(pipeline)
 
-        self.pipeline.append("(?:\S)")  # CATCH ALL remaining terms
+        self.pipeline.append(r"(?:\S)")  # CATCH ALL remaining terms
         self.tok = re.compile(r"({})".format("|".join(self.pipeline)))
 
     def add_to_pipeline(self, term):
@@ -220,7 +220,7 @@ class SocialTokenizer:
         # keep repeated puncts as one term
         # pipeline.append(r"")
 
-        pipeline.append("(?:\S)")  # CATCH ALL remaining terms
+        pipeline.append(r"(?:\S)")  # CATCH ALL remaining terms
 
         self.tok = re.compile(r"({})".format("|".join(pipeline)))
 
