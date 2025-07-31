@@ -4,6 +4,6 @@ matplotlib==2.2.2
 setuptools==36.2.5
 termcolor==1.1.0
 numpy==1.19.1
-nltk==3.2.4
+nltk==3.6.6
 ujson==1.35
 ftfy==4.4.3
