@@ -1,7 +1,7 @@
 tqdm==4.19.4
 colorama==0.3.9
 matplotlib==2.2.2
-setuptools==36.2.5
+setuptools==65.5.1
 termcolor==1.1.0
 numpy==1.19.1
 nltk==3.2.4
