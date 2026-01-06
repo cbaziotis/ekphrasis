@@ -787,7 +787,7 @@ slangdict = {
     "cpl": "Cyber Athlete Professional League",
     "cpm": "cost per 1000 impressions",
     "cptn": "captain",
-    "cpu": "computer",
+    "cpu": "central processing unit",
     "cpy": "copy",
     "cr": "Can't remember",
     "cr8": "crate",
